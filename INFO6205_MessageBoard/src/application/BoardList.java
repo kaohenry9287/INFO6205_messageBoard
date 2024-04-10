@@ -48,7 +48,8 @@ public class BoardList implements StackList<Board> {
 	}
 
 	@Override
-	public void sort() {
+	public List<Board> sort(boolean ascending) {
+		return null;
 		// Implement sorting logic for boards if needed
 	}
 

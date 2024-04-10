@@ -4,6 +4,7 @@ import database.DatabaseConnector;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CommentList implements StackList<Comment> {
@@ -47,9 +48,42 @@ public class CommentList implements StackList<Comment> {
 		return stack.isEmpty();
 	}
 
+	//sort based on created date
 	@Override
-	public void sort() {
-		// Implement sorting logic for comments if needed
+	public List<Comment> sort(boolean ascending) {
+		// no need to sort: empty or only one comment
+		if (isEmpty() || stack.size() == 1) {
+			return stack;
+		}
+		
+		int n = stack.size();
+		Comment[] comments = stack.toArray(new Comment[0]);
+		// ascending sort using bubble sort
+		if (ascending) {
+			for (int i = 0; i < n - 1; i++) {
+				for (int j = 0; j < n - i - 1; j++) {
+					if (comments[j].getCreateDate().compareTo(comments[j + 1].getCreateDate()) > 0) {
+						Comment temp = comments[j];
+						comments[j] = comments[j + 1];
+						comments[j + 1] = temp;
+					}
+				}
+			}
+		// descending sort using bubble sort
+		} else {
+			for (int i = 0; i < n - 1; i++) {
+				for (int j = 0; j < n - i - 1; j++) {
+					if (comments[j].getCreateDate().compareTo(comments[j + 1].getCreateDate()) <= 0) {
+						Comment temp = comments[j];
+						comments[j] = comments[j + 1];
+						comments[j + 1] = temp;
+					}
+				}
+			}			
+		}
+		
+		stack = new ArrayList<>(Arrays.asList(comments));
+		return stack;
 	}
 
 	// Method to get all comments

@@ -49,7 +49,8 @@ public class ArticleList implements StackList<Article> {
 	}
 
 	@Override
-	public void sort() {
+	public List<Article> sort(boolean ascending) {
+		return null;
 
 	}
 

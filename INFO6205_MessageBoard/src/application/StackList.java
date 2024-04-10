@@ -1,5 +1,7 @@
 package application;
 
+import java.util.List;
+
 interface StackList<T> {
 	void push(T item);
 
@@ -9,5 +11,5 @@ interface StackList<T> {
 
 	boolean isEmpty();
 
-	void sort();
+	List<T> sort(boolean ascending);
 }
