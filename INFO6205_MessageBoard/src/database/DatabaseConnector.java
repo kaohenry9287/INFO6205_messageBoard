@@ -5,6 +5,7 @@ import application.Article;
 import application.BoardList;
 import application.Board;
 import application.CommentList;
+import application.User;
 import application.Comment;
 
 import java.sql.Connection;
@@ -125,6 +126,22 @@ public class DatabaseConnector {
             return resultSet.next(); // Return true if username exists, false otherwise
         }
     }
+    
+    // Get user data from the database based on username and password
+    public static User getUserByUsernameAndPassword(Connection connection, String username, String password) throws SQLException {
+        String sql = "SELECT * FROM User WHERE userName = ? AND password = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, username);
+            statement.setString(2, password);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                String userID = resultSet.getString("userID");
+                return new User(username, password);
+            } else {
+                return null;
+            }
+        }
+    }			
 
 	// Insert Board
 	public static void insertBoardData(Connection connection, String boardID, String boardName) throws SQLException {
