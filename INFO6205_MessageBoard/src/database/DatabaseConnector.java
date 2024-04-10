@@ -5,6 +5,7 @@ import application.Article;
 import application.BoardList;
 import application.Board;
 import application.CommentList;
+import application.User;
 import application.Comment;
 
 import java.sql.Connection;
@@ -22,12 +23,12 @@ public class DatabaseConnector {
 	private static DatabaseConnector instance;
 	private static Connection connection;
 
+	static String jdbcUrl = "jdbc:mysql://localhost:3306/MessageBoard";
+	static String username = "root";
+	static String password = "123qweasd";
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
-		String jdbcUrl = "jdbc:mysql://localhost:3306/MessageBoard";
-		String username = "root";
-		String password = "henry0208";
 
 		try {
 			// Register MySQL JDBC Driver
@@ -57,7 +58,17 @@ public class DatabaseConnector {
 	}
 
 	// Method to get the database connection
-	public Connection getConnection() {
+	public static Connection getConnection() {
+		return connection;
+	}
+	
+	public static Connection getDBConnection() {
+		try {
+			connection = DriverManager.getConnection(jdbcUrl, username, password);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 		return connection;
 	}
 	
@@ -73,16 +84,64 @@ public class DatabaseConnector {
     }
 
 	// Insert User
-    public static void insertUserData(Connection connection, String userID, String userName, String password)
+    public static void insertUserData(Connection connection, String userName, String password)
 			throws SQLException {
-		String sql = "INSERT INTO User (userID, userName, password) VALUES (?, ?, ?)";
-		try (PreparedStatement statement = connection.prepareStatement(sql)) {
-			statement.setString(1, userID);
-			statement.setString(2, userName);
-			statement.setString(3, password);
-			statement.executeUpdate();
-		}
+        String sqlSelect = "SELECT MAX(userID) FROM User";
+		String sqlInsert = "INSERT INTO User (userID, userName, password) VALUES (?, ?, ?)";
+        String sqlCheckUsername = "SELECT * FROM User WHERE userName = ?";
+        try (PreparedStatement selectStatement = connection.prepareStatement(sqlSelect);
+                PreparedStatement insertStatement = connection.prepareStatement(sqlInsert);
+                PreparedStatement checkStatement = connection.prepareStatement(sqlCheckUsername)) {
+               // Get the last userID
+           ResultSet resultSet = selectStatement.executeQuery();
+           int lastUserID = 0;
+           if (resultSet.next()) {
+               lastUserID = resultSet.getInt(1);
+           }
+           // Increment the last userID by 1 to get the new userID
+           int newUserID = lastUserID + 1;
+
+           // Check if the username already exists
+           checkStatement.setString(1, userName);
+           ResultSet existingUserResultSet = checkStatement.executeQuery();
+           if (existingUserResultSet.next()) {
+               System.out.println("Username already exists. Please choose a different username.");
+               return;
+           }
+
+           // Insert the new user
+           insertStatement.setInt(1, newUserID);
+           insertStatement.setString(2, userName);
+           insertStatement.setString(3, password);
+           insertStatement.executeUpdate();
+       }
 	}
+    
+    // Check if username exists in the database
+    public static boolean usernameExists(Connection connection, String username) throws SQLException {
+        String sql = "SELECT * FROM User WHERE userName = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, username);
+            ResultSet resultSet = statement.executeQuery();
+            return resultSet.next(); // Return true if username exists, false otherwise
+        }
+    }
+    
+    // Get user data from the database based on username and password
+    public static User getUserByUsernameAndPassword(Connection connection, String username, String password) throws SQLException {
+        String sql = "SELECT * FROM User WHERE userName = ? AND password = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, username);
+            statement.setString(2, password);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                String userID = resultSet.getString("userID");
+                return new User(username, password);
+            } else {
+                return null;
+            }
+        }
+    }			
 
 	// Insert Board
 	public static void insertBoardData(Connection connection, String boardID, String boardName) throws SQLException {
