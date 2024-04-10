@@ -86,7 +86,7 @@ public class DatabaseConnector {
 	// Insert User
     public static void insertUserData(Connection connection, String userName, String password)
 			throws SQLException {
-        String sqlSelect = "SELECT MAX(userID) FROM User";
+	    String sqlSelect = "SELECT MAX(CAST(userID AS UNSIGNED)) FROM User";
 		String sqlInsert = "INSERT INTO User (userID, userName, password) VALUES (?, ?, ?)";
         String sqlCheckUsername = "SELECT * FROM User WHERE userName = ?";
         try (PreparedStatement selectStatement = connection.prepareStatement(sqlSelect);
@@ -144,15 +144,72 @@ public class DatabaseConnector {
     }			
 
 	// Insert Board
-	public static void insertBoardData(Connection connection, String boardID, String boardName) throws SQLException {
-		String sql = "INSERT INTO Board (boardID, boardName) VALUES (?, ?)";
-		try (PreparedStatement statement = connection.prepareStatement(sql)) {
-			statement.setString(1, boardID);
-			statement.setString(2, boardName);
-			statement.executeUpdate();
-		}
-	}
+	public static void insertBoardData(Connection connection, String boardName) throws SQLException {
+	    String sqlSelect = "SELECT MAX(CAST(boardID AS UNSIGNED)) FROM Board";
+	    String sqlInsert = "INSERT INTO Board (boardID, boardName) VALUES (?, ?)";
+	    String sqlCheckBoardname = "SELECT * FROM Board WHERE boardName = ?";
+	    try (PreparedStatement selectStatement = connection.prepareStatement(sqlSelect);
+            PreparedStatement insertStatement = connection.prepareStatement(sqlInsert);
+            PreparedStatement checkStatement = connection.prepareStatement(sqlCheckBoardname)) {
 
+           // Get the last boardID
+           ResultSet resultSet = selectStatement.executeQuery();
+           int lastBoardID = 0;
+           if (resultSet.next()) {
+               lastBoardID = resultSet.getInt(1);
+           }
+           // Increment the last boardID by 1 to get the new boardID
+           int newBoardID = lastBoardID + 1;
+
+           // Check if the boardname already exists
+//           checkStatement.setString(1, boardName);
+//           ResultSet existingBoardResultSet = checkStatement.executeQuery();
+//           if (existingBoardResultSet.next()) {
+//               System.out.println("DBinsert: Board name already exists. Please choose a different board name.");
+//               return;
+//           }
+
+           // Insert the new board
+           insertStatement.setInt(1, newBoardID);
+           insertStatement.setString(2, boardName);
+           insertStatement.executeUpdate();
+       }
+	}
+	
+    // Check if board exists in the database
+//    public static boolean boardExists(Connection connection, String boardname) throws SQLException {
+//        String sql = "SELECT * FROM Board WHERE boardName = ?";
+//        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+//            statement.setString(1, boardname);
+//            ResultSet resultSet = statement.executeQuery();
+//            return resultSet.next(); // Return true if boardname exists, false otherwise
+//        }
+//    }
+
+    // Get all boards in database
+    public static BoardList getAllBoards(Connection connection) throws SQLException {
+        String sql = "SELECT * FROM Board";
+        BoardList boardList = new BoardList();
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+                ResultSet resultSet = statement.executeQuery()) {
+
+               while (resultSet.next()) {
+                   String boardId = resultSet.getString("boardId");
+                   String boardName = resultSet.getString("boardName");
+
+                   // Create a new Board object with retrieved data
+                   Board board = new Board(boardId, boardName);
+                   // Add the board to the list
+                   boardList.addBoard(board);
+               }
+           } catch (SQLException e) {
+               e.printStackTrace();
+               throw new SQLException("Error retrieving boards from database.", e);
+           }
+
+        return boardList;
+    }
+    
 	// Insert Article
 	public static void insertArticleData(Connection connection, String articleID, String boardID, String authorID,
 			String title, String content) throws SQLException {

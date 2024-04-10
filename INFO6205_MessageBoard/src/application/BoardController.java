@@ -1,19 +1,28 @@
 package application;
 
 import java.io.IOException;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ResourceBundle;
 
+import database.DatabaseConnector;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class BoardController extends InitialData {
+public class BoardController extends InitialData implements Initializable{
 
 	
     @FXML
@@ -24,12 +33,9 @@ public class BoardController extends InitialData {
 	
 	@FXML
 	private Button addBoardButton;
-	
-    @FXML
-    private TextField boardnameField;
-    
+
 	@FXML
-	private Button createButton;
+	private ListView<String> boardListView;
 	
 	public void initData(User user) {
 		setCurrentUser(user);
@@ -38,6 +44,10 @@ public class BoardController extends InitialData {
     public void setUsername(String username) {
         usernameText.setText(username);
     }
+    
+    public BoardController() {
+    }
+
     
 	public void logoutButtonClicked(ActionEvent event) throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
@@ -59,7 +69,8 @@ public class BoardController extends InitialData {
 	public void addBoardButtonClicked(ActionEvent event) throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("AddBoard.fxml"));
 		Parent root = (Parent) loader.load();
-		
+		AddBoardController addBoardController = loader.getController();
+
 	    // Close the current stage
 	    Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 	    currentStage.close();
@@ -71,30 +82,23 @@ public class BoardController extends InitialData {
 		newStage.show();
 	}
 	
-	public void createButtonClicked(ActionEvent event) {
-		String boardname = boardnameField.getText();
 
-		// Check if boardname is not empty
-		if (boardname.isEmpty()) {
-			System.out.println("Board name cannot be empty.");
-			return;
-		}
-		
-	}
+
 	
-	
-	public void handleBack() throws IOException {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("Board.fxml"));
-		Parent root = (Parent) loader.load();
-		BoardController controller = loader.getController();
-		Scene newScene = new Scene(root);
-		Stage newStage = new Stage();
-		newStage.setScene(newScene);
-		newStage.show();
-		
-		// Close the current stage
-        Stage currentStage = (Stage) createButton.getScene().getWindow();
-        currentStage.close();
-		
-	}
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+        try {
+	        Connection connection = DatabaseConnector.getDBConnection();
+            BoardList boardList = DatabaseConnector.getAllBoards(connection);
+            ObservableList<String> boardNames = FXCollections.observableArrayList();
+            for (Board board : boardList.getAllBoards()) {
+                boardNames.add(board.getBoardName());
+            }
+            boardListView.setItems(boardNames);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
