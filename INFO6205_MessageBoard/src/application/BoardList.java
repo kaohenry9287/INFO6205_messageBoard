@@ -20,11 +20,16 @@ public class BoardList implements StackList<Board> {
 	public void push(Board board) {
 		stack.add(board);
 		try {
-			DatabaseConnector.insertBoardData(connection, board.getBoardId(), board.getBoardName()); // Insert board
-																										// data
+			connection = DatabaseConnector.getDBConnection();
+			DatabaseConnector.insertBoardData(connection, board.getBoardName()); // Insert board
+																										
 		} catch (SQLException e) {
 			e.printStackTrace(); // Handle exception appropriately
 		}
+	}
+	
+	public void addBoard(Board board) {
+		stack.add(board);
 	}
 
 	@Override

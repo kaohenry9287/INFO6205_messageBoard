@@ -20,6 +20,12 @@ public class AddBoardController extends InitialData {
 	@FXML
 	private Button createButton;
 	
+	public void initData(User user, BoardList boardList) {
+		setCurrentUser(user);
+		setCurrentBoardList(boardList);
+				
+	}
+	
 	public void createButtonClicked(ActionEvent event) {
 		String boardname = boardnameField.getText();
 
@@ -30,7 +36,7 @@ public class AddBoardController extends InitialData {
 		}
 		
 	    try {
-            BoardList boardList = getBoardList();
+            BoardList boardList = getCurrentBoardList();
             if (boardList == null) {
                 boardList = new BoardList();
               }
@@ -53,6 +59,9 @@ public class AddBoardController extends InitialData {
 	        FXMLLoader loader = new FXMLLoader(getClass().getResource("Board.fxml"));
 	        Parent setupRoot = loader.load();
 	        BoardController boardController = loader.getController();
+	        boardController.initData(getCurrentUser(), getCurrentBoardList());
+			String username = getCurrentUser().getUsername();
+            boardController.setUsername(username);
 
 	        Scene setupScene = new Scene(setupRoot);
 	        Stage setupStage = new Stage();
@@ -75,6 +84,10 @@ public class AddBoardController extends InitialData {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Board.fxml"));
 		Parent root = (Parent) loader.load();
 		BoardController controller = loader.getController();
+		controller.initData(getCurrentUser(), getCurrentBoardList());
+		String username = getCurrentUser().getUsername();
+		controller.setUsername(username);
+		
 		Scene newScene = new Scene(root);
 		Stage newStage = new Stage();
 		newStage.setScene(newScene);

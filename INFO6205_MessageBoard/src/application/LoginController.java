@@ -28,7 +28,7 @@ public class LoginController extends InitialData {
 
 	@FXML
 	private Button registerButton;
-    
+	    
 	@FXML
 	void registerButtonClicked(ActionEvent event) {
 		try {
@@ -89,9 +89,9 @@ public class LoginController extends InitialData {
 
 	            // Pass the currentUser to the BoardController if needed
 	            BoardController boardController = loader.getController();
-	            boardController.initData(currentUser, boardList);
+                boardController.initData(currentUser, boardList);
 	            boardController.setUsername(username);
-	            
+
 	            // Create a new scene with Board.fxml
 	            Scene boardScene = new Scene(boardRoot);
 	            

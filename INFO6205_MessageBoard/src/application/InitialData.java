@@ -19,8 +19,12 @@ public class InitialData {
 		this.user = user;
 	}
 	
-	public BoardList getBoardList() {
+	public BoardList getCurrentBoardList() {
 		return this.boardList;
+	}
+	
+	public void setCurrentBoardList(BoardList boardList) {
+		this.boardList = boardList;
 	}
 	
 }

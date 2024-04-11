@@ -37,10 +37,6 @@ public class BoardController extends InitialData implements Initializable{
 	@FXML
 	private ListView<String> boardListView;
 	
-	public void initData(User user) {
-		setCurrentUser(user);
-	}
-	
     public void setUsername(String username) {
         usernameText.setText(username);
     }
@@ -48,6 +44,11 @@ public class BoardController extends InitialData implements Initializable{
     public BoardController() {
     }
 
+	public void initData(User user, BoardList boardList) {
+		setCurrentUser(user);
+		setCurrentBoardList(boardList);
+				
+	}
     
 	public void logoutButtonClicked(ActionEvent event) throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
@@ -70,7 +71,8 @@ public class BoardController extends InitialData implements Initializable{
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("AddBoard.fxml"));
 		Parent root = (Parent) loader.load();
 		AddBoardController addBoardController = loader.getController();
-
+		addBoardController.initData(getCurrentUser(), getCurrentBoardList());
+		
 	    // Close the current stage
 	    Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 	    currentStage.close();
