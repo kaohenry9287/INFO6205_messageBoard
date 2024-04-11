@@ -84,9 +84,6 @@ public class BoardController extends InitialData implements Initializable{
 		newStage.show();
 	}
 	
-
-
-	
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
