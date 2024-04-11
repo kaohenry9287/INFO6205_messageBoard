@@ -16,6 +16,9 @@ import java.sql.SQLException;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.mindrot.jbcrypt.BCrypt;
+
 import java.time.LocalDate;
 
 public class DatabaseConnector {
@@ -84,7 +87,7 @@ public class DatabaseConnector {
     }
 
 	// Insert User
-    public static void insertUserData(Connection connection, String userName, String password)
+    public static void Usersignup(Connection connection, String userName, String password)
 			throws SQLException {
 	    String sqlSelect = "SELECT MAX(CAST(userID AS UNSIGNED)) FROM User";
 		String sqlInsert = "INSERT INTO User (userID, userName, password) VALUES (?, ?, ?)";
@@ -103,11 +106,13 @@ public class DatabaseConnector {
         		return;
         	}
 
-           // Insert the new user
+           // Hash password and insert the new user
         	User newUser = new User(userName, password);
-        	insertStatement.setString(1, newUser.getId().toString());
+    		String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+
+    		insertStatement.setString(1, newUser.getId().toString());
             insertStatement.setString(2, userName);
-            insertStatement.setString(3, password);
+            insertStatement.setString(3, hashedPassword);
             insertStatement.executeUpdate();
         }
     }
@@ -124,19 +129,20 @@ public class DatabaseConnector {
     }
     
     // Get user data from the database based on username and password
-    public static User getUserByUsernameAndPassword(Connection connection, String username, String password) throws SQLException {
-        String sql = "SELECT * FROM User WHERE userName = ? AND password = ?";
+    public static User Userlogin(Connection connection, String username, String password) throws SQLException {
+        String sql = "SELECT * FROM User WHERE userName = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, username);
-            statement.setString(2, password);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                String userId = resultSet.getString("boardId");
-                return new User(userId, username, password);
-            } else {
-                return null;
+                String hashPassword = resultSet.getString("password");
+                if (BCrypt.checkpw(password, hashPassword)) {
+                	String userId = resultSet.getString("userId");
+                    return new User(userId, username, password);               	
+                }
             }
         }
+		return null;
     }			
 
 	// Insert Board

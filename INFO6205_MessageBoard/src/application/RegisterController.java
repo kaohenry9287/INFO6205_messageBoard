@@ -76,7 +76,7 @@ public class RegisterController {
 	        }
 	        
 	        // Insert user data
-	        DatabaseConnector.insertUserData(connection, username, password);
+	        DatabaseConnector.Usersignup(connection, username, password);
 	        
 	        // Close the connection after use
 	        connection.close();

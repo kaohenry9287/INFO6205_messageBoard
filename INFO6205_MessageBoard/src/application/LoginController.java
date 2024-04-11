@@ -74,7 +74,7 @@ public class LoginController extends InitialData {
 	        }
 
 	        // Retrieve user data from the database
-	        User currentUser = DatabaseConnector.getUserByUsernameAndPassword(connection, username, password);
+	        User currentUser = DatabaseConnector.Userlogin(connection, username, password);
 
 	        // Check if user exists and password matches
 	        if (currentUser == null) {
