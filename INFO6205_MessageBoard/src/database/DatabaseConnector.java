@@ -92,30 +92,25 @@ public class DatabaseConnector {
         try (PreparedStatement selectStatement = connection.prepareStatement(sqlSelect);
                 PreparedStatement insertStatement = connection.prepareStatement(sqlInsert);
                 PreparedStatement checkStatement = connection.prepareStatement(sqlCheckUsername)) {
-               // Get the last userID
-           ResultSet resultSet = selectStatement.executeQuery();
-           int lastUserID = 0;
-           if (resultSet.next()) {
-               lastUserID = resultSet.getInt(1);
-           }
-           // Increment the last userID by 1 to get the new userID
-           int newUserID = lastUserID + 1;
+
+        	ResultSet resultSet = selectStatement.executeQuery();
 
            // Check if the username already exists
-           checkStatement.setString(1, userName);
-           ResultSet existingUserResultSet = checkStatement.executeQuery();
-           if (existingUserResultSet.next()) {
-               System.out.println("Username already exists. Please choose a different username.");
-               return;
-           }
+        	checkStatement.setString(1, userName);
+        	ResultSet existingUserResultSet = checkStatement.executeQuery();
+        	if (existingUserResultSet.next()) {
+        		System.out.println("Username already exists. Please choose a different username.");
+        		return;
+        	}
 
            // Insert the new user
-           insertStatement.setInt(1, newUserID);
-           insertStatement.setString(2, userName);
-           insertStatement.setString(3, password);
-           insertStatement.executeUpdate();
-       }
-	}
+        	User newUser = new User(userName, password);
+        	insertStatement.setString(1, newUser.getId().toString());
+            insertStatement.setString(2, userName);
+            insertStatement.setString(3, password);
+            insertStatement.executeUpdate();
+        }
+    }
     
     // Check if username exists in the database
     public static boolean usernameExists(Connection connection, String username) throws SQLException {
@@ -123,7 +118,8 @@ public class DatabaseConnector {
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, username);
             ResultSet resultSet = statement.executeQuery();
-            return resultSet.next(); // Return true if username exists, false otherwise
+         // Return true if username exists, false otherwise
+            return resultSet.next(); 
         }
     }
     
@@ -135,8 +131,8 @@ public class DatabaseConnector {
             statement.setString(2, password);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                String userID = resultSet.getString("userID");
-                return new User(username, password);
+                String userId = resultSet.getString("boardId");
+                return new User(userId, username, password);
             } else {
                 return null;
             }
@@ -152,39 +148,14 @@ public class DatabaseConnector {
             PreparedStatement insertStatement = connection.prepareStatement(sqlInsert);
             PreparedStatement checkStatement = connection.prepareStatement(sqlCheckBoardname)) {
 
-           // Get the last boardID
-           ResultSet resultSet = selectStatement.executeQuery();
-           int lastBoardID = 0;
-           if (resultSet.next()) {
-               lastBoardID = resultSet.getInt(1);
-           }
-           // Increment the last boardID by 1 to get the new boardID
-           int newBoardID = lastBoardID + 1;
-
-           // Check if the boardname already exists
-//           checkStatement.setString(1, boardName);
-//           ResultSet existingBoardResultSet = checkStatement.executeQuery();
-//           if (existingBoardResultSet.next()) {
-//               System.out.println("DBinsert: Board name already exists. Please choose a different board name.");
-//               return;
-//           }
+	    	Board newBoard = new Board(boardName);
 
            // Insert the new board
-           insertStatement.setInt(1, newBoardID);
+           insertStatement.setString(1, newBoard.getBoardId().toString());
            insertStatement.setString(2, boardName);
            insertStatement.executeUpdate();
        }
 	}
-	
-    // Check if board exists in the database
-//    public static boolean boardExists(Connection connection, String boardname) throws SQLException {
-//        String sql = "SELECT * FROM Board WHERE boardName = ?";
-//        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-//            statement.setString(1, boardname);
-//            ResultSet resultSet = statement.executeQuery();
-//            return resultSet.next(); // Return true if boardname exists, false otherwise
-//        }
-//    }
 
     // Get all boards in database
     public static BoardList getAllBoards(Connection connection) throws SQLException {
@@ -197,9 +168,8 @@ public class DatabaseConnector {
                    String boardId = resultSet.getString("boardId");
                    String boardName = resultSet.getString("boardName");
 
-                   // Create a new Board object with retrieved data
-                   Board board = new Board(boardId, boardName);
                    // Add the board to the list
+                   Board board = new Board(boardId, boardName);
                    boardList.addBoard(board);
                }
            } catch (SQLException e) {
