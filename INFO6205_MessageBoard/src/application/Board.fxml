@@ -5,6 +5,8 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
@@ -16,13 +18,13 @@
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-background-color: FFFBD5;">
                <children>
-                  <ListView fx:id="boardListView" fixedCellSize="50.0" layoutX="-3.0" layoutY="62.4" prefHeight="336.0" prefWidth="196.0" style="-fx-background-color: FFFBD5;" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="62.0" />
+                  <ListView fx:id="boardListView" fixedCellSize="50.0" layoutX="-3.0" layoutY="97.0" prefHeight="301.0" prefWidth="197.0" style="-fx-control-inner-background: FFFBD5" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="97.0" />
                   <Button fx:id="logoutButton" layoutX="9.0" layoutY="457.0" mnemonicParsing="false" onAction="#logoutButtonClicked" prefHeight="29.0" prefWidth="82.0" text="&lt;&lt; Logout">
                      <font>
                         <Font name="October Compressed Tamil Black" size="13.0" />
                      </font>
                   </Button>
-                  <Text fx:id="usernameText" layoutX="63.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username">
+                  <Text fx:id="usernameText" layoutX="106.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username">
                      <font>
                         <Font name="October Compressed Tamil Black" size="16.0" />
                      </font></Text>
@@ -31,6 +33,21 @@
                         <Font name="October Compressed Tamil Black" size="13.0" />
                      </font>
                   </Button>
+                  <ImageView fitHeight="55.0" fitWidth="56.0" layoutX="9.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../lib/icon/Avatar.png" />
+                     </image>
+                  </ImageView>
+                  <Text layoutX="64.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hello,">
+                     <font>
+                        <Font name="October Compressed Tamil Black" size="16.0" />
+                     </font>
+                  </Text>
+                  <Text layoutX="18.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Topics">
+                     <font>
+                        <Font name="October Compressed Tamil Black" size="16.0" />
+                     </font>
+                  </Text>
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
