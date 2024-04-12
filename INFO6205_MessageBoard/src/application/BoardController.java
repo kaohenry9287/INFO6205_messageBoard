@@ -54,9 +54,9 @@ public class BoardController extends InitialData {
 	@FXML
     private ListView<String> listView;
 	private ArticleList articleList;
-	private AnchorPane currentAnchorPane; // 当前显示的 AnchorPane
-    private AnchorPane searchAnchorPane; // 搜索 AnchorPane
-    private AnchorPane articleAnchorPane; // 文章 AnchorPane
+	private AnchorPane currentAnchorPane;
+    private AnchorPane searchAnchorPane; 
+    private AnchorPane articleAnchorPane; 
     private AnchorPane commentAnchorPane;
 	
 	public void initData(User user) {
