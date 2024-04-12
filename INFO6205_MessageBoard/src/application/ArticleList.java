@@ -5,7 +5,9 @@ import application.Article;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ArticleList implements StackList<Article> {
 	private List<Article> stack;
@@ -100,4 +102,14 @@ public class ArticleList implements StackList<Article> {
 			e.printStackTrace();
 		}
 	}
+	public List<Article> searchArticles(String searchWords) {
+        List<String> searchWordsArray = Arrays.asList(searchWords.trim().split(" "));
+
+        return stack.stream().filter(article -> {
+            // Check if any of the search words is present in the article title or content
+            return searchWordsArray.stream().anyMatch(word ->
+                    article.getTitle().toLowerCase().contains(word.toLowerCase()) ||
+                    article.getContent().toLowerCase().contains(word.toLowerCase()));
+        }).collect(Collectors.toList());
+    }
 }
