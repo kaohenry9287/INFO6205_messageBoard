@@ -61,11 +61,9 @@ public class BoardController extends InitialData {
 	
 	public void initData(User user) {
 		setCurrentUser(user);
-        this.articleList = articleList;
-        this.searchAnchorPane = searchAnchorPane;
-        this.articleAnchorPane = articleAnchorPane;
-        this.commentAnchorPane = commentAnchorPane;
         currentAnchorPane = searchAnchorPane;
+        articleAnchorPane.setVisible(false);
+        commentAnchorPane.setVisible(false);
 	}
 	
     public void setUsername(String username) {
