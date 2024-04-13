@@ -1,6 +1,7 @@
 package application;
 
 import java.util.UUID;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 
 public class Comment {
@@ -8,10 +9,10 @@ public class Comment {
 	private String articleID;
 	private String authorID;
 	private String content;
-	private LocalDate createDate;
+	private Timestamp createDate;
 
 	// Constructor for new comment
-	public Comment(String articleID, String authorID, String content, LocalDate createDate) {
+	public Comment(String articleID, String authorID, String content, Timestamp createDate) {
 		this.commentID = UUID.randomUUID();
 		this.articleID = articleID;
 		this.authorID = authorID;
@@ -20,7 +21,7 @@ public class Comment {
 	}
 
 	// Constructor for existed comment
-	public Comment(String commentID, String articleID, String authorID, String content, LocalDate createDate) {
+	public Comment(String commentID, String articleID, String authorID, String content, Timestamp createDate) {
 		this.commentID = UUID.fromString(commentID);
 		this.articleID = articleID;
 		this.authorID = authorID;
@@ -49,7 +50,7 @@ public class Comment {
 		this.content = newContent;
 	}
 
-	public LocalDate getCreateDate() {
+	public Timestamp getCreateDate() {
 		return this.createDate;
 	}
 

@@ -17,7 +17,7 @@ public class User {
 	}
 
 	// Constructor for user login
-	public User(String userId, String username, String password, String currentBudgetId) {
+	public User(String userId, String username, String password) {
 		this.userId = UUID.fromString(userId);
 		this.username = username;
 		this.password = password;
@@ -35,6 +35,4 @@ public class User {
 	public String getPassword() {
 		return this.password;
 	}
-		
-
 }
