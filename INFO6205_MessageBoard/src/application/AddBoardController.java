@@ -59,7 +59,7 @@ public class AddBoardController extends InitialData {
 	        FXMLLoader loader = new FXMLLoader(getClass().getResource("Board.fxml"));
 	        Parent setupRoot = loader.load();
 	        BoardController boardController = loader.getController();
-	        boardController.initData(getCurrentUser(), getCurrentBoardList());
+	        boardController.initData(getCurrentUser(), getCurrentBoardList(), getCurrentUnreadComments());
 			String username = getCurrentUser().getUsername();
             boardController.setUsername(username);
 
@@ -84,7 +84,7 @@ public class AddBoardController extends InitialData {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Board.fxml"));
 		Parent root = (Parent) loader.load();
 		BoardController controller = loader.getController();
-		controller.initData(getCurrentUser(), getCurrentBoardList());
+		controller.initData(getCurrentUser(), getCurrentBoardList(), getCurrentUnreadComments());
 		String username = getCurrentUser().getUsername();
 		controller.setUsername(username);
 		
