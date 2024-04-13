@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<Pane minHeight="500.0" minWidth="800.0" style="-fx-background-color: FFFBD5;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.UnreadCommentController">
+   <children>
+      <Text layoutX="196.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Unread Comments" textAlignment="CENTER" wrappingWidth="408.0902404785156">
+         <font>
+            <Font name="October Condensed Tamil Black" size="24.0" />
+         </font>
+      </Text>
+      <Text fx:id="contentText" layoutX="234.0" layoutY="149.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Comment content" wrappingWidth="183.49102783203125">
+         <font>
+            <Font name="October Condensed Tamil Heavy" size="16.0" />
+         </font>
+      </Text>
+      <Button fx:id="nextButton" layoutX="326.0" layoutY="348.0" mnemonicParsing="false" onAction="#nextButtonClicked" prefHeight="27.0" prefWidth="159.0" text="Next">
+         <font>
+            <Font name="October Condensed Tamil Heavy" size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="backBtn" layoutX="24.0" layoutY="24.0" mnemonicParsing="false" onAction="#handleBack" text="&lt;&lt; Back">
+         <font>
+            <Font name="October Condensed Tamil Heavy" size="12.0" />
+         </font>
+      </Button>
+   </children>
+</Pane>

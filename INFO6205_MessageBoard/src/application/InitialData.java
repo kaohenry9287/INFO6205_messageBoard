@@ -4,6 +4,7 @@ public class InitialData {
 	
 	private User user;
     private BoardList boardList;
+    private UnreadComment unreadComments;
 
 	
 	public void initData(User user, BoardList boardList) {
@@ -27,4 +28,11 @@ public class InitialData {
 		this.boardList = boardList;
 	}
 	
+	public UnreadComment getCurrentUnreadComments() {
+		return this.unreadComments;
+	}
+	
+	public void setCurrentUnreadComments(UnreadComment unreadComments) {
+		this.unreadComments = unreadComments;
+	}
 }

@@ -35,6 +35,9 @@ public class BoardController extends InitialData implements Initializable{
 	private Button addBoardButton;
 
 	@FXML
+	private Button viewUnreadButton;
+	
+	@FXML
 	private ListView<String> boardListView;
 	
     public void setUsername(String username) {
@@ -44,13 +47,22 @@ public class BoardController extends InitialData implements Initializable{
     public BoardController() {
     }
 
-	public void initData(User user, BoardList boardList) {
+	public void initData(User user, BoardList boardList, UnreadComment unreadComments) {
 		setCurrentUser(user);
 		setCurrentBoardList(boardList);
-				
+		setCurrentUnreadComments(unreadComments);
 	}
     
-	public void logoutButtonClicked(ActionEvent event) throws IOException {
+	public void logoutButtonClicked(ActionEvent event) throws IOException, SQLException {
+		
+        Connection connection = DatabaseConnector.getDBConnection();
+        if (connection == null) {
+            System.out.println("Failed to establish connection to the database.");
+            return;
+        }
+        
+        DatabaseConnector.Userlogout(connection, getCurrentUser().getId());
+        
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
 		Parent root = (Parent) loader.load();
 		
@@ -63,8 +75,6 @@ public class BoardController extends InitialData implements Initializable{
 		Stage newStage = new Stage();
 		newStage.setScene(newScene);
 		newStage.show();
-
-        System.out.println("Logout successfully!");
 	}
 	
 	public void addBoardButtonClicked(ActionEvent event) throws IOException {
@@ -73,6 +83,32 @@ public class BoardController extends InitialData implements Initializable{
 		AddBoardController addBoardController = loader.getController();
 		addBoardController.initData(getCurrentUser(), getCurrentBoardList());
 		
+	    // Close the current stage
+	    Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+	    currentStage.close();
+	    
+	    // Show the login screen
+		Scene newScene = new Scene(root);
+		Stage newStage = new Stage();
+		newStage.setScene(newScene);
+		newStage.show();
+	}
+
+	
+	public void viewUnreadButtonClicked(ActionEvent event) throws IOException, SQLException {
+		FXMLLoader newloader = new FXMLLoader(getClass().getResource("UnreadComment.fxml"));
+		Parent root = (Parent) newloader.load();
+		UnreadCommentController unreadCommentController = newloader.getController();
+        Connection connection = DatabaseConnector.getDBConnection();
+		UnreadComment unreadcomments = DatabaseConnector.getUnreadComments(connection, getCurrentUser().getId());
+		if (unreadcomments.isEmpty()) {
+			unreadCommentController.setContent("No unread");
+		} else {
+			unreadCommentController.setContent(unreadcomments.peek().getContent());
+			unreadcomments.dequeue();
+		}
+		unreadCommentController.initData(getCurrentUser(), getCurrentBoardList(), unreadcomments);
+
 	    // Close the current stage
 	    Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 	    currentStage.close();
@@ -99,5 +135,6 @@ public class BoardController extends InitialData implements Initializable{
         } catch (Exception e) {
             e.printStackTrace();
         }
+        
     }
 }
