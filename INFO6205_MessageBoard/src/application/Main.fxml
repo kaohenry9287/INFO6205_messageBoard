@@ -3,38 +3,45 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane minHeight="500.0" minWidth="800.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<Pane minHeight="500.0" minWidth="800.0" style="-fx-background-color: FFFBD5;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.LoginController">
    <children>
-      <PasswordField layoutX="326.0" layoutY="349.0" />
-      <TextField layoutX="326.0" layoutY="299.0" />
+      <PasswordField fx:id="passwordField" layoutX="326.0" layoutY="349.0" />
+      <TextField fx:id="usernameField" layoutX="326.0" layoutY="299.0" />
       <Text layoutX="196.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Application Name or one message" textAlignment="CENTER" wrappingWidth="408.0902404785156">
          <font>
-            <Font name="System Bold Italic" size="24.0" />
+            <Font name="October Condensed Tamil Black" size="24.0" />
          </font>
       </Text>
       <Text layoutX="326.0" layoutY="292.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username" wrappingWidth="76.49102783203125">
          <font>
-            <Font size="16.0" />
+            <Font name="October Condensed Tamil Heavy" size="16.0" />
          </font>
       </Text>
       <Text layoutX="326.0" layoutY="342.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password" wrappingWidth="76.49102783203125">
          <font>
-            <Font size="16.0" />
+            <Font name="October Condensed Tamil Heavy" size="16.0" />
          </font>
       </Text>
-      <Button layoutX="326.0" layoutY="383.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="149.0" text="Log In">
+      <Button fx:id="loginButton" layoutX="326.0" layoutY="383.0" mnemonicParsing="false" onAction="#loginButtonClicked" prefHeight="27.0" prefWidth="158.0" text="Log In">
          <font>
-            <Font name="System Bold" size="14.0" />
+            <Font name="October Condensed Tamil Heavy" size="14.0" />
          </font>
       </Button>
-      <Button layoutX="326.0" layoutY="422.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="149.0" text="Register">
+      <Button fx:id="registerButton" layoutX="326.0" layoutY="422.0" mnemonicParsing="false" onAction="#registerButtonClicked" prefHeight="27.0" prefWidth="157.0" text="Register">
          <font>
-            <Font name="System Bold" size="14.0" />
+            <Font name="October Condensed Tamil Heavy" size="14.0" />
          </font>
       </Button>
+      <ImageView fitHeight="195.0" fitWidth="186.0" layoutX="320.0" layoutY="81.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../lib/icon/Logo.png" />
+         </image>
+      </ImageView>
    </children>
 </Pane>

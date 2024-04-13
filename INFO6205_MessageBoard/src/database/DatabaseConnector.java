@@ -5,6 +5,7 @@ import application.Article;
 import application.BoardList;
 import application.Board;
 import application.CommentList;
+import application.User;
 import application.Comment;
 
 import java.sql.Connection;
@@ -15,6 +16,9 @@ import java.sql.SQLException;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.mindrot.jbcrypt.BCrypt;
+
 import java.time.LocalDate;
 
 public class DatabaseConnector {
@@ -22,12 +26,12 @@ public class DatabaseConnector {
 	private static DatabaseConnector instance;
 	private static Connection connection;
 
+	static String jdbcUrl = "jdbc:mysql://localhost:3306/MessageBoard";
+	static String username = "root";
+	static String password = "123qweasd";
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
-		String jdbcUrl = "jdbc:mysql://localhost:3306/MessageBoard";
-		String username = "root";
-		String password = "henry0208";
 
 		try {
 			// Register MySQL JDBC Driver
@@ -57,7 +61,17 @@ public class DatabaseConnector {
 	}
 
 	// Method to get the database connection
-	public Connection getConnection() {
+	public static Connection getConnection() {
+		return connection;
+	}
+	
+	public static Connection getDBConnection() {
+		try {
+			connection = DriverManager.getConnection(jdbcUrl, username, password);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 		return connection;
 	}
 	
@@ -73,27 +87,105 @@ public class DatabaseConnector {
     }
 
 	// Insert User
-    public static void insertUserData(Connection connection, String userID, String userName, String password)
+    public static void Usersignup(Connection connection, String userName, String password)
 			throws SQLException {
-		String sql = "INSERT INTO User (userID, userName, password) VALUES (?, ?, ?)";
-		try (PreparedStatement statement = connection.prepareStatement(sql)) {
-			statement.setString(1, userID);
-			statement.setString(2, userName);
-			statement.setString(3, password);
-			statement.executeUpdate();
-		}
-	}
+	    String sqlSelect = "SELECT MAX(CAST(userID AS UNSIGNED)) FROM User";
+		String sqlInsert = "INSERT INTO User (userID, userName, password) VALUES (?, ?, ?)";
+        String sqlCheckUsername = "SELECT * FROM User WHERE userName = ?";
+        try (PreparedStatement selectStatement = connection.prepareStatement(sqlSelect);
+                PreparedStatement insertStatement = connection.prepareStatement(sqlInsert);
+                PreparedStatement checkStatement = connection.prepareStatement(sqlCheckUsername)) {
+
+        	ResultSet resultSet = selectStatement.executeQuery();
+
+           // Check if the username already exists
+        	checkStatement.setString(1, userName);
+        	ResultSet existingUserResultSet = checkStatement.executeQuery();
+        	if (existingUserResultSet.next()) {
+        		System.out.println("Username already exists. Please choose a different username.");
+        		return;
+        	}
+
+           // Hash password and insert the new user
+        	User newUser = new User(userName, password);
+    		String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+
+    		insertStatement.setString(1, newUser.getId().toString());
+            insertStatement.setString(2, userName);
+            insertStatement.setString(3, hashedPassword);
+            insertStatement.executeUpdate();
+        }
+    }
+    
+    // Check if username exists in the database
+    public static boolean usernameExists(Connection connection, String username) throws SQLException {
+        String sql = "SELECT * FROM User WHERE userName = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, username);
+            ResultSet resultSet = statement.executeQuery();
+         // Return true if username exists, false otherwise
+            return resultSet.next(); 
+        }
+    }
+    
+    // Get user data from the database based on username and password
+    public static User Userlogin(Connection connection, String username, String password) throws SQLException {
+        String sql = "SELECT * FROM User WHERE userName = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, username);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                String hashPassword = resultSet.getString("password");
+                if (BCrypt.checkpw(password, hashPassword)) {
+                	String userId = resultSet.getString("userId");
+                    return new User(userId, username, password);               	
+                }
+            }
+        }
+		return null;
+    }			
 
 	// Insert Board
-	public static void insertBoardData(Connection connection, String boardID, String boardName) throws SQLException {
-		String sql = "INSERT INTO Board (boardID, boardName) VALUES (?, ?)";
-		try (PreparedStatement statement = connection.prepareStatement(sql)) {
-			statement.setString(1, boardID);
-			statement.setString(2, boardName);
-			statement.executeUpdate();
-		}
+	public static void insertBoardData(Connection connection, String boardName) throws SQLException {
+	    String sqlSelect = "SELECT MAX(CAST(boardID AS UNSIGNED)) FROM Board";
+	    String sqlInsert = "INSERT INTO Board (boardID, boardName) VALUES (?, ?)";
+	    String sqlCheckBoardname = "SELECT * FROM Board WHERE boardName = ?";
+	    try (PreparedStatement selectStatement = connection.prepareStatement(sqlSelect);
+            PreparedStatement insertStatement = connection.prepareStatement(sqlInsert);
+            PreparedStatement checkStatement = connection.prepareStatement(sqlCheckBoardname)) {
+
+	    	Board newBoard = new Board(boardName);
+
+           // Insert the new board
+           insertStatement.setString(1, newBoard.getBoardId().toString());
+           insertStatement.setString(2, boardName);
+           insertStatement.executeUpdate();
+       }
 	}
 
+    // Get all boards in database
+    public static BoardList getAllBoards(Connection connection) throws SQLException {
+        String sql = "SELECT * FROM Board";
+        BoardList boardList = new BoardList();
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+                ResultSet resultSet = statement.executeQuery()) {
+
+               while (resultSet.next()) {
+                   String boardId = resultSet.getString("boardId");
+                   String boardName = resultSet.getString("boardName");
+
+                   // Add the board to the list
+                   Board board = new Board(boardId, boardName);
+                   boardList.addBoard(board);
+               }
+           } catch (SQLException e) {
+               e.printStackTrace();
+               throw new SQLException("Error retrieving boards from database.", e);
+           }
+
+        return boardList;
+    }
+    
 	// Insert Article
 	public static void insertArticleData(Connection connection, String articleID, String boardID, String authorID,
 			String title, String content) throws SQLException {
