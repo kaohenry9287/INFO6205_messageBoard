@@ -82,14 +82,14 @@ public class LoginController extends InitialData {
 	        } else {
 	            // Retrieve all boards from the database
 	            BoardList boardList = DatabaseConnector.getAllBoards(connection);
-
+	            UnreadComment unreadComments = new UnreadComment(100000);
 	        	// Load Board.fxml
 	            FXMLLoader loader = new FXMLLoader(getClass().getResource("Board.fxml"));
 	            Parent boardRoot = loader.load();
 
 	            // Pass the currentUser to the BoardController if needed
 	            BoardController boardController = loader.getController();
-                boardController.initData(currentUser, boardList);
+                boardController.initData(currentUser, boardList, unreadComments);
 	            boardController.setUsername(username);
 
 	            // Create a new scene with Board.fxml

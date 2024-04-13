@@ -7,9 +7,11 @@ public class InitialData {
     private UnreadComment unreadComments;
 
 	
-	public void initData(User user, BoardList boardList) {
+	public void initData(User user, BoardList boardList, UnreadComment unreadComments) {
 		this.user = user;
 		this.boardList = boardList;
+		this.unreadComments = unreadComments;
+		
 	}
 	
 	public User getCurrentUser() {
