@@ -23,10 +23,18 @@ public class CommentList implements StackList<Comment> {
 		try {
 			DatabaseConnector.insertCommentData(connection, comment.getCommentId(), comment.getArticleId(),
 					comment.getAuthorId(), comment.getContent()); // Insert comment data
+			
 		} catch (SQLException e) {
 			e.printStackTrace(); // Handle exception appropriately
 		}
+	
 	}
+	
+	
+	public void addComment(Comment comment) {
+		stack.add(comment);
+	}
+	
 
 	@Override
 	public Comment pop() {
@@ -90,6 +98,7 @@ public class CommentList implements StackList<Comment> {
 	public List<Comment> getAllComments() {
 		return new ArrayList<>(stack);
 	}
+	
 
 	// Method to list all comment data as a 2D array
 	public String[][] listAsArray() {

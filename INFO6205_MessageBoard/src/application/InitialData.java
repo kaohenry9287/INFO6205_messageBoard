@@ -4,11 +4,15 @@ public class InitialData {
 	
 	private User user;
     private BoardList boardList;
+    private ArticleList articleList;
+    private CommentList commentList;
 
 	
-	public void initData(User user, BoardList boardList) {
+	public void initData(User user, BoardList boardList, ArticleList articleList, CommentList commentList) {
 		this.user = user;
 		this.boardList = boardList;
+		this.articleList = articleList;
+		this.commentList = commentList;
 	}
 	
 	public User getCurrentUser() {
@@ -25,6 +29,22 @@ public class InitialData {
 	
 	public void setCurrentBoardList(BoardList boardList) {
 		this.boardList = boardList;
+	}
+	
+	public ArticleList getCurrentArticleList() {
+		return this.articleList;
+	}
+	
+	public void setCurrentArticleList(ArticleList articleList) {
+		this.articleList = articleList;
+	}
+	
+	public CommentList getCurrentCommentList() {
+		return this.commentList;
+	}
+	
+	public void setCurrentCommentList(CommentList commentList) {
+		this.commentList = commentList;
 	}
 	
 }
