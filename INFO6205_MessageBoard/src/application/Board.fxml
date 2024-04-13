@@ -5,6 +5,8 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
@@ -14,18 +16,41 @@
    <children>
       <SplitPane dividerPositions="0.25" minHeight="500.0" minWidth="800.0">
         <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-background-color: FFFBD5;">
                <children>
-                  <ListView fixedCellSize="50.0" layoutX="-3.0" layoutY="62.4" prefHeight="336.0" prefWidth="196.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="62.0" />
-                  <Button fx:id="logoutButton" layoutX="9.0" layoutY="457.0" mnemonicParsing="false" onAction="#logoutButtonClicked" prefHeight="29.0" prefWidth="82.0" text="&lt;&lt; Logout">
+                  <ListView fx:id="boardListView" fixedCellSize="50.0" layoutX="-3.0" layoutY="97.0" prefHeight="301.0" prefWidth="197.0" style="-fx-control-inner-background: FFFBD5" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="97.0" />
+                  <Button fx:id="logoutButton" layoutX="9.0" layoutY="457.0" mnemonicParsing="false" onAction="#logoutButtonClicked" prefHeight="29.0" prefWidth="169.0" text="&lt;&lt; Logout">
                      <font>
-                        <Font name="System Bold" size="12.0" />
+                        <Font name="October Compressed Tamil Black" size="13.0" />
                      </font>
                   </Button>
-                  <Text fx:id="usernameText" layoutX="63.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username" />
+                  <Text fx:id="usernameText" layoutX="106.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username">
+                     <font>
+                        <Font name="October Compressed Tamil Black" size="16.0" />
+                     </font></Text>
                   <Button fx:id="addBoardButton" layoutX="9.0" layoutY="420.0" mnemonicParsing="false" onAction="#addBoardButtonClicked" prefHeight="29.0" prefWidth="82.0" text="+ Add Board">
                      <font>
-                        <Font name="System Bold" size="12.0" />
+                        <Font name="October Compressed Tamil Black" size="13.0" />
+                     </font>
+                  </Button>
+                  <ImageView fitHeight="55.0" fitWidth="56.0" layoutX="9.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../lib/icon/Avatar.png" />
+                     </image>
+                  </ImageView>
+                  <Text layoutX="64.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hello,">
+                     <font>
+                        <Font name="October Compressed Tamil Black" size="16.0" />
+                     </font>
+                  </Text>
+                  <Text layoutX="18.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Topics">
+                     <font>
+                        <Font name="October Compressed Tamil Black" size="16.0" />
+                     </font>
+                  </Text>
+                  <Button fx:id="viewUnreadButton" layoutX="95.0" layoutY="420.0" mnemonicParsing="false" onAction="#viewUnreadButtonClicked" prefHeight="29.0" prefWidth="82.0" text="View Unread">
+                     <font>
+                        <Font name="October Compressed Tamil Black" size="13.0" />
                      </font>
                   </Button>
                </children>
@@ -71,11 +96,14 @@
                            <items>
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="222.0" prefWidth="594.0">
                                  <children>
-                                    <Text layoutX="36.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username" />
+                                    <Text layoutX="36.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username">
+                                       <font>
+                                          <Font name="October Compressed Tamil Black" size="13.0" />
+                                       </font></Text>
                                     <TextArea layoutY="77.0" prefHeight="122.0" prefWidth="594.0" />
                                     <Text layoutX="14.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Topic" wrappingWidth="153.6334228515625">
                                        <font>
-                                          <Font size="18.0" />
+                                          <Font name="October Compressed Tamil Black" size="13.0" />
                                        </font>
                                     </Text>
                                  </children>
@@ -84,7 +112,10 @@
                                  <children>
                                     <Button layoutX="507.0" layoutY="226.0" mnemonicParsing="false" text="Comment" />
                                     <TextArea layoutY="65.0" prefHeight="150.0" prefWidth="594.0" />
-                                    <Text layoutX="50.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username" />
+                                    <Text layoutX="50.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username">
+                                       <font>
+                                          <Font name="October Compressed Tamil Black" size="13.0" />
+                                       </font></Text>
                                  </children>
                               </AnchorPane>
                            </items>

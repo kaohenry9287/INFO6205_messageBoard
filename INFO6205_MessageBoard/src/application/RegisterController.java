@@ -76,7 +76,7 @@ public class RegisterController {
 	        }
 	        
 	        // Insert user data
-	        DatabaseConnector.insertUserData(connection, username, password);
+	        DatabaseConnector.Usersignup(connection, username, password);
 	        
 	        // Close the connection after use
 	        connection.close();
@@ -107,8 +107,6 @@ public class RegisterController {
 	public void handleBack() throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
 		Parent root = (Parent) loader.load();
-		LoginController controller = loader.getController();
-	    //controller.initData(controller.getCurrentUser(), controller.getCurrentBudget());	
 		Scene newScene = new Scene(root);
 		Stage newStage = new Stage();
 		newStage.setScene(newScene);

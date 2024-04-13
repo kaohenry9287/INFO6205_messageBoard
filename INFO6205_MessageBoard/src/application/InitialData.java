@@ -1,10 +1,15 @@
 package application;
 
 public class InitialData {
-	private User user;
 	
-	public void initData(User user) {
+	private User user;
+    private BoardList boardList;
+    private UnreadComment unreadComments;
+
+	
+	public void initData(User user, BoardList boardList) {
 		this.user = user;
+		this.boardList = boardList;
 	}
 	
 	public User getCurrentUser() {
@@ -13,5 +18,21 @@ public class InitialData {
 	
 	public void setCurrentUser(User user) {
 		this.user = user;
+	}
+	
+	public BoardList getCurrentBoardList() {
+		return this.boardList;
+	}
+	
+	public void setCurrentBoardList(BoardList boardList) {
+		this.boardList = boardList;
+	}
+	
+	public UnreadComment getCurrentUnreadComments() {
+		return this.unreadComments;
+	}
+	
+	public void setCurrentUnreadComments(UnreadComment unreadComments) {
+		this.unreadComments = unreadComments;
 	}
 }
