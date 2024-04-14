@@ -2,6 +2,7 @@ package application;
 
 import java.util.UUID;
 import java.time.LocalDate;
+import java.sql.Timestamp;
 
 public class Article {
 	
@@ -10,11 +11,11 @@ public class Article {
 	private String authorID;
 	private String title;
 	private String content;
-	private LocalDate createDate;
+	private Timestamp createDate;
 	private int commentCount;
 	
 	// Constructor for new article
-	public Article (String boardID, String authorID, String title, String content, LocalDate createDate) {
+	public Article (String boardID, String authorID, String title, String content, Timestamp createDate) {
 		this.articleID = UUID.randomUUID();
 		this.authorID = authorID;
 		this.title = title;
@@ -23,7 +24,7 @@ public class Article {
 	}
 	
 	// Constructor for existed article
-	public Article (String articleID, String boardID, String authorID, String title, String content, LocalDate createDate, int commentCount) {
+	public Article (String articleID, String boardID, String authorID, String title, String content, Timestamp createDate, int commentCount) {
 		this.articleID = UUID.fromString(articleID);
 		this.boardID = boardID;
 		this.authorID = authorID;
@@ -61,7 +62,7 @@ public class Article {
 		this.content = newContent;
 	}
 
-	public LocalDate getCreateDate() {
+	public Timestamp getCreateDate() {
 		return this.createDate;
 	}
 	

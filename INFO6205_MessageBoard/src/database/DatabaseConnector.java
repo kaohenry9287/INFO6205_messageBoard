@@ -9,6 +9,7 @@ import application.UnreadComment;
 import application.User;
 import application.Comment;
 
+import java.time.LocalDateTime;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -204,11 +205,10 @@ public class DatabaseConnector {
 				String articleID = resultSet.getString("articleID");
 				String authorID = resultSet.getString("authorID");
 				String content = resultSet.getString("content");
-				Date createDate = resultSet.getDate("createDate");
-				LocalDate localDate = createDate.toLocalDate();
+				Timestamp createDate = resultSet.getTimestamp("createDate");
 
 				// Create Comment object and enqueue it into the queue
-				Comment comment = new Comment(commentID, articleID, authorID, content, localDate);
+				Comment comment = new Comment(commentID, articleID, authorID, content, createDate);
 				unreadComments.enqueue(comment);
 			}
 		} catch (SQLException e) {
@@ -291,12 +291,11 @@ public class DatabaseConnector {
 				String authorID = resultSet.getString("authorID");
 				String title = resultSet.getString("title");
 				String content = resultSet.getString("content");
-				Date createDate = resultSet.getDate("createDate");
-				LocalDate createLocalDate = createDate.toLocalDate();
+				Timestamp createDate = resultSet.getTimestamp("createDate");
 				int commentCount = resultSet.getInt("commentCount");
 
 				// Add the board to the list
-				Article article = new Article(articleID, boardID, authorID, title, content, createLocalDate,
+				Article article = new Article(articleID, boardID, authorID, title, content, createDate,
 						commentCount);
 				articleList.addArticle(article);
 			}
@@ -351,7 +350,7 @@ public class DatabaseConnector {
 					String commentID = resultSet.getString("commentID");
 					String authorID = resultSet.getString("authorID");
 					String content = resultSet.getString("content");
-					LocalDate createDate = resultSet.getDate("createDate").toLocalDate();
+					Timestamp createDate = resultSet.getTimestamp("createDate");
 
 					Comment comment = new Comment(commentID, articleID, authorID, content, createDate);
 					commentList.addComment(comment);
