@@ -43,6 +43,9 @@ public class BoardController extends InitialData {
     private Button nextButton;
 	
 	@FXML
+    private Button addarticle;
+	
+	@FXML
     private Text topicuser;
 
     @FXML
@@ -149,6 +152,31 @@ public class BoardController extends InitialData {
         return searchResults;
     }
     
+    @FXML
+    void addArticleButtonClicked(ActionEvent event) {
+        // Open the AddArticle.fxml for users to input article details
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("AddArticle.fxml"));
+            Parent root = (Parent) loader.load();
+            AddArticleController controller = loader.getController();
+            controller.initData(currentUser); // Pass the current user to the AddArticleController
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.showAndWait(); // Show the Add Article window and wait for it to close
+            // After the Add Article window closes, refresh the article list
+            refreshArticleList();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void refreshArticleList() {
+        // Update the article list view to reflect the changes
+        listView.getItems().clear();
+        listView.getItems().addAll(articleList.getAllArticles().stream().map(Article::getTitle).collect(Collectors.toList()));
+    }
+
+    
     public void handleListViewClick() {
         nextButton.setDisable(false); // 启用按钮
     }
@@ -173,7 +201,5 @@ public class BoardController extends InitialData {
                 }
             }
         }
-    }
-	
-	
+    }	
 }

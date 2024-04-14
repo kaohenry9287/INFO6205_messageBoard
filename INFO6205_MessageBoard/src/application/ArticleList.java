@@ -29,6 +29,9 @@ public class ArticleList implements StackList<Article> {
 			e.printStackTrace();
 		}
 	}
+	public void addArticle(Article article) {
+		stack.add(article);
+	}
 
 	@Override
 	public Article pop() {
