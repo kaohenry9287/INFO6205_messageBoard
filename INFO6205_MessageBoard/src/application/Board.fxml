@@ -60,10 +60,10 @@
                   <AnchorPane layoutX="14.0" layoutY="19.0" prefHeight="498.4" prefWidth="596.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
                         <Text layoutX="17.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Search Topic" />
-                        <TextField layoutX="105.0" layoutY="17.0" prefHeight="26.0" prefWidth="474.0" promptText="keywords..." />
+                        <TextField fx:id="searchBar" layoutX="105.0" layoutY="17.0" onAction="#search" prefHeight="26.0" prefWidth="474.0" promptText="keywords..." />
                         <ListView fixedCellSize="75.0" layoutX="17.0" layoutY="72.0" prefHeight="354.0" prefWidth="566.0" />
-                        <Button layoutX="529.0" layoutY="453.0" mnemonicParsing="false" text="Click" />
-                        <Button fx:id="addarticle" layoutX="434.0" layoutY="453.0" mnemonicParsing="false" text="+Add Article" />
+                        <Button fx:id="nextButton" layoutX="529.0" layoutY="453.0" mnemonicParsing="false" onAction="#goToNextAnchorPane" text="Click" />
+                        <Button fx:id="addarticle" layoutX="434.0" layoutY="453.0" mnemonicParsing="false" onAction="#addArticleButtonClicked" text="+Add Article" />
                      </children>
                   </AnchorPane>
                   <AnchorPane prefHeight="498.4" prefWidth="596.0" visible="false">

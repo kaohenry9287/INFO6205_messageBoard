@@ -134,7 +134,30 @@ public class BoardController extends InitialData implements Initializable{
 		newStage.show();
 	}
 
-	
+	public void addArticleButtonClicked(ActionEvent event) throws IOException {
+	    // Check if a board is selected
+	    if (boardListView.getSelectionModel().isEmpty()) {
+	        // Display an error message or handle the situation accordingly
+	        System.out.println("Please select a board before adding an article.");
+	        return;
+	    }
+	    
+	    FXMLLoader loader = new FXMLLoader(getClass().getResource("AddArticle.fxml"));
+	    Parent root = (Parent) loader.load();
+
+	    AddArticleController addArticleController = loader.getController();
+	    addArticleController.initData(getCurrentUser(), getCurrentBoardList());
+	    
+	    // Close the current stage
+	    Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+	    currentStage.close();
+	    
+	    // Show the login screen
+	    Scene newScene = new Scene(root);
+	    Stage newStage = new Stage();
+	    newStage.setScene(newScene);
+	    newStage.show();
+	}
 	public void viewUnreadButtonClicked(ActionEvent event) throws IOException, SQLException {
 		FXMLLoader newloader = new FXMLLoader(getClass().getResource("UnreadComment.fxml"));
 		Parent root = (Parent) newloader.load();
@@ -200,7 +223,7 @@ public class BoardController extends InitialData implements Initializable{
 
     
     public void handleListViewClick() {
-        nextButton.setDisable(false); // 启用按钮
+        nextButton.setDisable(false);
     }
 
     public void goToNextAnchorPane(ActionEvent event) {
@@ -223,5 +246,5 @@ public class BoardController extends InitialData implements Initializable{
                 }
             }
         }
-    }
+    }  
 }

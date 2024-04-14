@@ -262,18 +262,29 @@ public class DatabaseConnector {
     }
     
 	// Insert Article
-	public static void insertArticleData(Connection connection, String articleID, String boardID, String authorID,
-		String title, String content) throws SQLException {
-		String sql = "INSERT INTO Article (articleID, boardID, aurhorID, content, createDate, commentCount) VALUES (?, ?, ?, ?, NOW(), 0)";
-		try (PreparedStatement statement = connection.prepareStatement(sql)) {
-			statement.setString(1, articleID);
-			statement.setString(2, boardID);
-			statement.setString(3, authorID);
-			statement.setString(4, title);
-			statement.setString(5, content);
-			statement.executeUpdate();
-		}
-	}
+    public static void insertArticleData(Connection connection, String articleID, String authorID,
+            String title, String content) throws SQLException {
+        // Check if board list is empty
+        BoardList boardList = getAllBoards(connection);
+        if (boardList.isEmpty()) {
+            System.out.println("No boards available. Please create a board first.");
+            return;
+        }
+
+        // Get the ID of the latest board
+        String boardId = boardList.peek().getBoardId();
+
+        // Insert article data
+        String sql = "INSERT INTO Article (articleID, boardID, authorID, title, content, createDate, commentCount) VALUES (?, ?, ?, ?, ?, NOW(), 0)";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, articleID);
+            statement.setString(2, boardId);
+            statement.setString(3, authorID);
+            statement.setString(4, title);
+            statement.setString(5, content);
+            statement.executeUpdate();
+        }
+    }
 
 	// Insert Comment
 	public static void insertCommentData(Connection connection, String commentID, String articleID, String authorID,

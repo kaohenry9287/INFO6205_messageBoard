@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane minHeight="500.0" minWidth="800.0" style="-fx-background-color: FFFBD5;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.AddBoardController">
+<Pane minHeight="500.0" minWidth="800.0" style="-fx-background-color: FFFBD5;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.AddArticleController">
    <children>
       <TextField fx:id="topicfield" layoutX="325.0" layoutY="125.0" />
       <Text layoutX="196.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add New Article" textAlignment="CENTER" wrappingWidth="408.0902404785156">
@@ -35,6 +35,6 @@
             <Font name="October Condensed Tamil Heavy" size="16.0" />
          </font>
       </Text>
-      <TextArea fx:id="contextfield" layoutX="300.0" layoutY="187.0" prefHeight="200.0" prefWidth="200.0" />
+      <TextArea fx:id="contentfield" layoutX="300.0" layoutY="187.0" prefHeight="200.0" prefWidth="200.0" />
    </children>
 </Pane>
