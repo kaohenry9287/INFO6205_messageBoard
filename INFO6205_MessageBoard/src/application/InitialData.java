@@ -4,12 +4,16 @@ public class InitialData {
 	
 	private User user;
     private BoardList boardList;
+	private ArticleList articleList;
+    private CommentList commentList;
     private UnreadComment unreadComments;
 
 	
-	public void initData(User user, BoardList boardList, UnreadComment unreadComments) {
+	public void initData(User user, BoardList boardList, UnreadComment unreadComments, ArticleList articleList, CommentList commentList) {
 		this.user = user;
 		this.boardList = boardList;
+		this.articleList = articleList;
+		this.commentList = commentList;
 		this.unreadComments = unreadComments;
 		
 	}
@@ -36,5 +40,21 @@ public class InitialData {
 	
 	public void setCurrentUnreadComments(UnreadComment unreadComments) {
 		this.unreadComments = unreadComments;
+	}
+
+	public ArticleList getCurrentArticleList() {
+		return this.articleList;
+	}
+	
+	public void setCurrentArticleList(ArticleList articleList) {
+		this.articleList = articleList;
+	}
+	
+	public CommentList getCurrentCommentList() {
+		return this.commentList;
+	}
+	
+	public void setCurrentCommentList(CommentList commentList) {
+		this.commentList = commentList;
 	}
 }

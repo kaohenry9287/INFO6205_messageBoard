@@ -22,12 +22,12 @@ public class BoardList implements StackList<Board> {
 		try {
 			connection = DatabaseConnector.getDBConnection();
 			DatabaseConnector.insertBoardData(connection, board.getBoardName()); // Insert board
-																										
+
 		} catch (SQLException e) {
 			e.printStackTrace(); // Handle exception appropriately
 		}
 	}
-	
+
 	public void addBoard(Board board) {
 		stack.add(board);
 	}
@@ -100,4 +100,28 @@ public class BoardList implements StackList<Board> {
 			e.printStackTrace(); // Handle exception appropriately
 		}
 	}
+
+	// Method to get board from given BoardID
+	public Board getBoardByID(String givenID) {
+		for (Board board : stack) {
+			if (board.getBoardId().equals(givenID)) {
+				return board;
+			}
+		}
+		return null;
+	}
+
+	// Method to get board from given BoardID
+	public Board getBoardByIndex(int givenIndex) {
+		int count = 0;
+		for (Board board : stack) {
+			if (count == givenIndex) {
+				return board;
+			}else {
+				count++;
+			}
+		}
+		return null;
+	}
+
 }
