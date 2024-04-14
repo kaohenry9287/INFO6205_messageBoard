@@ -111,113 +111,114 @@ public class DatabaseConnector {
 			User newUser = new User(userName, password);
 			String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 
-    		insertStatement.setString(1, newUser.getId().toString());
-            insertStatement.setString(2, userName);
-            insertStatement.setString(3, hashedPassword);
-            insertStatement.executeUpdate();
-        }
-    }
-    
-    // Check if username exists in the database
-    public static boolean usernameExists(Connection connection, String username) throws SQLException {
-        String sql = "SELECT * FROM User WHERE userName = ?";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, username);
-            ResultSet resultSet = statement.executeQuery();
-         // Return true if username exists, false otherwise
-            return resultSet.next(); 
-        }
-    }
-    
-    // Get user data from the database based on username and password
-    public static User Userlogin(Connection connection, String username, String password) throws SQLException {
-        String sqlSelect = "SELECT * FROM User WHERE userName = ?";
-        String sqlUpdateLoginDate = "UPDATE User SET loginDate = ? WHERE userId = ?";
+			insertStatement.setString(1, newUser.getId().toString());
+			insertStatement.setString(2, userName);
+			insertStatement.setString(3, hashedPassword);
+			insertStatement.executeUpdate();
+		}
+	}
 
-        try (PreparedStatement selectStatement = connection.prepareStatement(sqlSelect);
-                PreparedStatement updateStatement = connection.prepareStatement(sqlUpdateLoginDate)) {
-        	
-            selectStatement.setString(1, username);
-            ResultSet resultSet = selectStatement.executeQuery();
-            
-            if (resultSet.next()) {
-                String hashPassword = resultSet.getString("password");
-                if (BCrypt.checkpw(password, hashPassword)) {
-                	String userId = resultSet.getString("userId");
-                	
-                    // Update loginDate for the logged-in user
-                    Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
-                    updateStatement.setTimestamp(1, currentTimestamp);
-                    updateStatement.setString(2, userId);
-                    updateStatement.executeUpdate();
-                    
-                    return new User(userId, username, password);               	
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw e;
-        }
-        
+	// Check if username exists in the database
+	public static boolean usernameExists(Connection connection, String username) throws SQLException {
+		String sql = "SELECT * FROM User WHERE userName = ?";
+		try (PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setString(1, username);
+			ResultSet resultSet = statement.executeQuery();
+			// Return true if username exists, false otherwise
+			return resultSet.next();
+		}
+	}
+
+	// Get user data from the database based on username and password
+	public static User Userlogin(Connection connection, String username, String password) throws SQLException {
+		String sqlSelect = "SELECT * FROM User WHERE userName = ?";
+		String sqlUpdateLoginDate = "UPDATE User SET loginDate = ? WHERE userId = ?";
+
+		try (PreparedStatement selectStatement = connection.prepareStatement(sqlSelect);
+				PreparedStatement updateStatement = connection.prepareStatement(sqlUpdateLoginDate)) {
+
+			selectStatement.setString(1, username);
+			ResultSet resultSet = selectStatement.executeQuery();
+
+			if (resultSet.next()) {
+				String hashPassword = resultSet.getString("password");
+				if (BCrypt.checkpw(password, hashPassword)) {
+					String userId = resultSet.getString("userId");
+
+					// Update loginDate for the logged-in user
+					Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+					updateStatement.setTimestamp(1, currentTimestamp);
+					updateStatement.setString(2, userId);
+					updateStatement.executeUpdate();
+
+					return new User(userId, username, password);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		}
+
 		return null;
-    }
-    
-    // User logout
-    public static void Userlogout(Connection connection, String userId) throws SQLException {
-        String sqlUpdateLogoutDate = "UPDATE User SET logoutDate = ? WHERE userId = ?";
-        
-        try (PreparedStatement updateStatement = connection.prepareStatement(sqlUpdateLogoutDate)) {
-            // Set current timestamp as the logout date
-            Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
-            
-            updateStatement.setTimestamp(1, currentTimestamp);
-            updateStatement.setString(2, userId);
-            
-            // Execute the update statement
-            int rowsAffected = updateStatement.executeUpdate();
-            
-            if (rowsAffected > 0) {
-                System.out.println("Logout successfully!");
-            } else {
-                System.out.println("User with userId " + userId + " not found. Logout date not updated.");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw e;
-        }
-    }
-    
-    // Method to get unread comments as a queue
-    public static UnreadComment getUnreadComments(Connection connection, String userId) throws SQLException {
-        UnreadComment unreadComments = new UnreadComment(100000);
-        
-        // SQL query to retrieve unread comments
-        String sql = "SELECT commentID, articleID, authorID, content, createDate FROM Comment " +
-                "WHERE createDate > (SELECT logoutDate FROM User WHERE userId = ?)";
-        
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, userId);
-            ResultSet resultSet = statement.executeQuery();
-            
-            while (resultSet.next()) {
-            	String commentID = resultSet.getString("commentID");
-            	String articleID = resultSet.getString("articleID");
-            	String authorID = resultSet.getString("authorID");
-                String content = resultSet.getString("content");
-                Timestamp createDate = resultSet.getTimestamp("createDate");
-                
-                // Create Comment object and enqueue it into the queue
-                Comment comment = new Comment(commentID, articleID, authorID, content, createDate);
-                unreadComments.enqueue(comment);
-            }
-        } catch (SQLException e) {
-            // Handle SQL exceptions
-            e.printStackTrace();
-            throw e;
-        }
-        
-        return unreadComments;
-    }
+	}
+
+	// User logout
+	public static void Userlogout(Connection connection, String userId) throws SQLException {
+		String sqlUpdateLogoutDate = "UPDATE User SET logoutDate = ? WHERE userId = ?";
+
+		try (PreparedStatement updateStatement = connection.prepareStatement(sqlUpdateLogoutDate)) {
+			// Set current timestamp as the logout date
+			Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+
+			updateStatement.setTimestamp(1, currentTimestamp);
+			updateStatement.setString(2, userId);
+
+			// Execute the update statement
+			int rowsAffected = updateStatement.executeUpdate();
+
+			if (rowsAffected > 0) {
+				System.out.println("Logout successfully!");
+			} else {
+				System.out.println("User with userId " + userId + " not found. Logout date not updated.");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	// Method to get unread comments as a queue
+	public static UnreadComment getUnreadComments(Connection connection, String userId) throws SQLException {
+		UnreadComment unreadComments = new UnreadComment(100000);
+
+		// SQL query to retrieve unread comments
+		String sql = "SELECT commentID, articleID, authorID, content, createDate FROM Comment "
+				+ "WHERE createDate > (SELECT logoutDate FROM User WHERE userId = ?)";
+
+		try (PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setString(1, userId);
+			ResultSet resultSet = statement.executeQuery();
+
+			while (resultSet.next()) {
+				String commentID = resultSet.getString("commentID");
+				String articleID = resultSet.getString("articleID");
+				String authorID = resultSet.getString("authorID");
+				String content = resultSet.getString("content");
+				Date createDate = resultSet.getDate("createDate");
+				LocalDate localDate = createDate.toLocalDate();
+
+				// Create Comment object and enqueue it into the queue
+				Comment comment = new Comment(commentID, articleID, authorID, content, localDate);
+				unreadComments.enqueue(comment);
+			}
+		} catch (SQLException e) {
+			// Handle SQL exceptions
+			e.printStackTrace();
+			throw e;
+		}
+
+		return unreadComments;
+	}
 
 	// Method to retrieve a User object by userID
 	public static User getUserByID(Connection connection, String userID) throws SQLException {
@@ -309,7 +310,7 @@ public class DatabaseConnector {
 
 	// Insert Article
 	public static void insertArticleData(Connection connection, String articleID, String boardID, String authorID,
-		String title, String content) throws SQLException {
+			String title, String content) throws SQLException {
 		String sql = "INSERT INTO Article (articleID, boardID, aurhorID, content, createDate, commentCount) VALUES (?, ?, ?, ?, NOW(), 0)";
 		try (PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, articleID);
@@ -330,12 +331,10 @@ public class DatabaseConnector {
 			statement.setString(2, articleID);
 			statement.setString(3, authorID);
 			statement.setString(4, content);
-			
+
 			// Execute the SQL statement
-	        statement.executeUpdate();
-	        
-	        
-			System.out.println("Insert comment success!");
+			statement.executeUpdate();
+
 
 		}
 

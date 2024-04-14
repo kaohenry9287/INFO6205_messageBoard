@@ -2,17 +2,18 @@ package application;
 
 import java.util.UUID;
 
-import java.sql.Timestamp;
 import database.DatabaseConnector;
+
 import java.sql.SQLException;
 import java.time.LocalDate;
+
 
 public class Comment {
 	private UUID commentID;
 	private String articleID;
 	private String authorID;
 	private String content;
-	private Timestamp createDate;
+	private LocalDate createDate;
 
 	// Constructor for new comment
 	public Comment(String articleID, String authorID, String content) {
@@ -23,7 +24,7 @@ public class Comment {
 	}
 
 	// Constructor for existed comment
-	public Comment(String commentID, String articleID, String authorID, String content, Timestamp createDate) {
+	public Comment(String commentID, String articleID, String authorID, String content, LocalDate createDate) {
 		this.commentID = UUID.fromString(commentID);
 		this.articleID = articleID;
 		this.authorID = authorID;
@@ -52,7 +53,7 @@ public class Comment {
 		this.content = newContent;
 	}
 
-	public Timestamp getCreateDate() {
+	public LocalDate getCreateDate() {
 		return this.createDate;
 	}
 	
