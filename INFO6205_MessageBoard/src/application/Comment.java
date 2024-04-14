@@ -5,7 +5,9 @@ import java.util.UUID;
 import database.DatabaseConnector;
 
 import java.sql.SQLException;
-import java.time.LocalDate;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 public class Comment {
@@ -13,7 +15,7 @@ public class Comment {
 	private String articleID;
 	private String authorID;
 	private String content;
-	private LocalDate createDate;
+	private Timestamp createDate;
 
 	// Constructor for new comment
 	public Comment(String articleID, String authorID, String content) {
@@ -24,7 +26,7 @@ public class Comment {
 	}
 
 	// Constructor for existed comment
-	public Comment(String commentID, String articleID, String authorID, String content, LocalDate createDate) {
+	public Comment(String commentID, String articleID, String authorID, String content, Timestamp createDate) {
 		this.commentID = UUID.fromString(commentID);
 		this.articleID = articleID;
 		this.authorID = authorID;
@@ -53,7 +55,7 @@ public class Comment {
 		this.content = newContent;
 	}
 
-	public LocalDate getCreateDate() {
+	public Timestamp getCreateDate() {
 		return this.createDate;
 	}
 	
@@ -66,7 +68,17 @@ public class Comment {
 	        // Use the username instead of authorID
 	        StringBuilder formattedComment = new StringBuilder();
 	        formattedComment.append(author.getUsername()).append("\n");
-	        formattedComment.append(createDate).append("\n\n");
+
+	        // Assuming createDate is a Timestamp object
+	        // Convert the Timestamp to LocalDateTime for formatting
+	        System.out.println(createDate);
+	        LocalDateTime localDateTime = createDate.toLocalDateTime();
+
+	        // Format the LocalDateTime
+	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+	        String formattedDateTime = localDateTime.format(formatter);
+
+	        formattedComment.append(formattedDateTime).append("\n\n");
 	        formattedComment.append(content).append("\n");
 	        return formattedComment.toString();
 	    } else {

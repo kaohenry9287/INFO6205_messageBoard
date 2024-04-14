@@ -40,7 +40,10 @@ public class BoardController extends InitialData implements Initializable {
 
 	@FXML
 	private Button commentButton;
-	
+
+	@FXML
+	private Button commentSortButton;
+
 	@FXML
 	private ListView<String> boardListView;
 
@@ -49,6 +52,9 @@ public class BoardController extends InitialData implements Initializable {
 
 	@FXML
 	private ListView<String> commentListView;
+	
+	// Define a boolean variable to track the current sorting order
+	private boolean ascendingOrder = true;
 
 	public void setUsername(String username) {
 		usernameText.setText(username);
@@ -62,17 +68,17 @@ public class BoardController extends InitialData implements Initializable {
 		setCurrentBoardList(boardList);
 		setCurrentUnreadComments(unreadComments);
 	}
-    
+
 	public void logoutButtonClicked(ActionEvent event) throws IOException, SQLException {
-		
-        Connection connection = DatabaseConnector.getDBConnection();
-        if (connection == null) {
-            System.out.println("Failed to establish connection to the database.");
-            return;
-        }
-        
-        DatabaseConnector.Userlogout(connection, getCurrentUser().getId());
-        
+
+		Connection connection = DatabaseConnector.getDBConnection();
+		if (connection == null) {
+			System.out.println("Failed to establish connection to the database.");
+			return;
+		}
+
+		DatabaseConnector.Userlogout(connection, getCurrentUser().getId());
+
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
 		Parent root = (Parent) loader.load();
 
@@ -110,7 +116,7 @@ public class BoardController extends InitialData implements Initializable {
 		FXMLLoader newloader = new FXMLLoader(getClass().getResource("UnreadComment.fxml"));
 		Parent root = (Parent) newloader.load();
 		UnreadCommentController unreadCommentController = newloader.getController();
-        Connection connection = DatabaseConnector.getDBConnection();
+		Connection connection = DatabaseConnector.getDBConnection();
 		UnreadComment unreadcomments = DatabaseConnector.getUnreadComments(connection, getCurrentUser().getId());
 		if (unreadcomments.isEmpty()) {
 			unreadCommentController.setContent("No unread");
@@ -120,16 +126,42 @@ public class BoardController extends InitialData implements Initializable {
 		}
 		unreadCommentController.initData(getCurrentUser(), getCurrentBoardList(), unreadcomments);
 
-	    // Close the current stage
-	    Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-	    currentStage.close();
-	    
-	    // Show the login screen
+		// Close the current stage
+		Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+		currentStage.close();
+
+		// Show the login screen
 		Scene newScene = new Scene(root);
 		Stage newStage = new Stage();
 		newStage.setScene(newScene);
 		newStage.show();
 	}
+
+	@FXML
+	public void commentSortButtonClicked(ActionEvent event) throws SQLException {
+	    try {
+	        // Get the current list of comments
+	        CommentList commentList = getCurrentCommentList();
+	        List<Comment> comments = commentList.getAllComments();
+
+	        // Toggle the sorting order
+	        ascendingOrder = !ascendingOrder; // Toggle the sorting order
+
+	        // Sort the comments based on the current order
+	        comments = commentList.sort(ascendingOrder);
+
+	        // Show sorted comments on screen
+	        ObservableList<String> sortedComments = FXCollections.observableArrayList();
+	        for (Comment comment : comments) {
+	            sortedComments.add(comment.getFormattedComment());
+	        }
+	        commentListView.setItems(sortedComments);
+	        
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+
 
 	// Event handler for the "Comment" button
 	@FXML
@@ -148,6 +180,8 @@ public class BoardController extends InitialData implements Initializable {
 
 			Comment newComment = new Comment(tempArticleID, authorID, content);
 			CommentList commentList = DatabaseConnector.getAllCommentsForArticle(connection, tempArticleID);
+			setCurrentCommentList(commentList);
+
 			commentList.push(newComment);
 
 			// Reload comments for the selected article
@@ -156,10 +190,9 @@ public class BoardController extends InitialData implements Initializable {
 			// Clear the comment TextArea
 			commentTextArea.clear();
 
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void loadCommentsForArticle(String boardID, String articleID) {
@@ -175,6 +208,7 @@ public class BoardController extends InitialData implements Initializable {
 			// Get the comments for the selected article
 			CommentList commentList = DatabaseConnector.getAllCommentsForArticle(connection,
 					selectedArticle.getArticleId());
+			setCurrentCommentList(commentList);
 
 			// Show comment on screen
 			ObservableList<String> comments = FXCollections.observableArrayList();
