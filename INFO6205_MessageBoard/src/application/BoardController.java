@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import database.DatabaseConnector;
@@ -18,7 +20,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -39,6 +43,42 @@ public class BoardController extends InitialData implements Initializable{
 	
 	@FXML
 	private ListView<String> boardListView;
+	
+	@FXML
+    private TextField searchBar;
+    
+	@FXML
+	private Button createButton;
+	
+	@FXML
+    private Button nextButton;
+	
+	@FXML
+    private Button addarticle;
+	
+	@FXML
+    private Text topicuser;
+
+    @FXML
+    private TextArea topicarticle;
+
+    @FXML
+    private Text topic;
+	
+	@FXML
+    private ListView<String> listView;
+	private ArticleList articleList;
+	private AnchorPane currentAnchorPane;
+    private AnchorPane searchAnchorPane; 
+    private AnchorPane articleAnchorPane; 
+    private AnchorPane commentAnchorPane;
+	
+	public void initData(User user) {
+		setCurrentUser(user);
+        currentAnchorPane = searchAnchorPane;
+        articleAnchorPane.setVisible(false);
+        commentAnchorPane.setVisible(false);
+	}
 	
     public void setUsername(String username) {
         usernameText.setText(username);
@@ -136,5 +176,52 @@ public class BoardController extends InitialData implements Initializable{
             e.printStackTrace();
         }
         
+    }
+    @FXML 
+    public void search(ActionEvent event) {
+        listView.getItems().clear();
+        String searchWords = searchBar.getText().toLowerCase(); // Get search keywords
+        List<String> searchResults = searchList(searchWords, articleList.getAllArticles());
+        listView.getItems().addAll(searchResults);
+    }
+
+    private List<String> searchList(String searchWords, List<Article> listOfArticles) {
+        List<String> searchResults = new ArrayList<>();
+
+        for (Article article : listOfArticles) {
+            if (article.getTitle().toLowerCase().contains(searchWords)) {
+                searchResults.add(article.getTitle());
+            }
+        }
+
+        return searchResults;
+    }
+    
+
+    
+    public void handleListViewClick() {
+        nextButton.setDisable(false); // 启用按钮
+    }
+
+    public void goToNextAnchorPane(ActionEvent event) {
+        if (currentAnchorPane == searchAnchorPane) {
+            currentAnchorPane.setVisible(false);
+            articleAnchorPane.setVisible(true);
+            currentAnchorPane = articleAnchorPane;
+        }
+    }
+    @FXML
+    void displayArticleDetails(ActionEvent event) {
+        String selectedTitle = listView.getSelectionModel().getSelectedItem();
+        if (selectedTitle != null) {
+            for (Article article : articleList.getAllArticles()) {
+                if (article.getTitle().equals(selectedTitle)) {
+                    topic.setText(article.getTitle());
+                    topicuser.setText(article.getAuthorId()); // Assuming authorId is the user's username
+                    topicarticle.setText(article.getContent());
+                    break;
+                }
+            }
+        }
     }
 }

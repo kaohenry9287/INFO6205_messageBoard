@@ -27,6 +27,10 @@ public class ArticleList implements StackList<Article> {
 			e.printStackTrace();
 		}
 	}
+	
+	public void addBoard(Article article) {
+		stack.add(article);
+	}
 
 	@Override
 	public Article pop() {
