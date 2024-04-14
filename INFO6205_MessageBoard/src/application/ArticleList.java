@@ -27,6 +27,10 @@ public class ArticleList implements StackList<Article> {
 			e.printStackTrace();
 		}
 	}
+	
+	public void addArticle(Article article) {
+		stack.add(article);
+	}
 
 	@Override
 	public Article pop() {
@@ -99,5 +103,15 @@ public class ArticleList implements StackList<Article> {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	// Method to get Article by ID
+	public Article getArticleByID(String givenID) {
+		for (Article article : stack) {
+			if (article.getArticleId().equals(givenID)) {
+				return article;
+			}
+		}
+		return null;
 	}
 }
