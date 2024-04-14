@@ -334,8 +334,8 @@ public class DatabaseConnector {
 
 			// Execute the SQL statement
 			statement.executeUpdate();
-
-
+			
+			System.out.println("Insert comment success!");
 		}
 
 	}
