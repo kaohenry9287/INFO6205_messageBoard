@@ -21,21 +21,15 @@ public class ArticleList implements StackList<Article> {
 	public void push(Article article) {
 	    stack.add(article);
 	    try {
-	        DatabaseConnector.insertArticleData(connection, article.getArticleId(), article.getAuthorId(),
+	        DatabaseConnector.insertArticleData(connection, article.getArticleId(), article.getBoardId(), article.getAuthorId(),
 	                article.getTitle(), article.getContent());
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
 	}
 	
-	public void addBoard(Article article) {
+	public void addArticle(Article article) {
 	    stack.add(article);
-	    try {
-	        DatabaseConnector.insertArticleData(connection, article.getArticleId(), article.getAuthorId(),
-	                article.getTitle(), article.getContent());
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
 	}
 
 	@Override

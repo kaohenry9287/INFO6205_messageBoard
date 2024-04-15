@@ -29,7 +29,7 @@ public class DatabaseConnector {
 
 	static String jdbcUrl = "jdbc:mysql://localhost:3306/MessageBoard";
 	static String username = "root";
-	static String password = "Typs94029";
+	static String password = "123qweasd";
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -262,23 +262,14 @@ public class DatabaseConnector {
     }
     
 	// Insert Article
-    public static void insertArticleData(Connection connection, String articleID, String authorID,
+    public static void insertArticleData(Connection connection, String articleID, String boardID, String authorID,
             String title, String content) throws SQLException {
-        // Check if board list is empty
-        BoardList boardList = getAllBoards(connection);
-        if (boardList.isEmpty()) {
-            System.out.println("No boards available. Please create a board first.");
-            return;
-        }
-
-        // Get the ID of the latest board
-        String boardId = boardList.peek().getBoardId();
 
         // Insert article data
         String sql = "INSERT INTO Article (articleID, boardID, authorID, title, content, createDate, commentCount) VALUES (?, ?, ?, ?, ?, NOW(), 0)";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, articleID);
-            statement.setString(2, boardId);
+            statement.setString(2, boardID);
             statement.setString(3, authorID);
             statement.setString(4, title);
             statement.setString(5, content);
@@ -286,6 +277,23 @@ public class DatabaseConnector {
         }
     }
 
+    // Get boardID by boardName
+    public static String getBoardIDbyBoardName(Connection connection, String boardName) throws SQLException {
+        String sql = "SELECT boardId FROM Board WHERE boardName = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, boardName); // Set the boardName parameter
+            ResultSet resultSet = statement.executeQuery();
+            
+            if (resultSet.next()) {
+                // Extract boardId from the result set
+                String boardId = resultSet.getString("boardId");
+                return boardId;
+            } else {
+                return null; 
+            }
+        }
+    }
+    
 	// Insert Comment
 	public static void insertCommentData(Connection connection, String commentID, String articleID, String authorID,
 			String content) throws SQLException {
@@ -358,8 +366,8 @@ public class DatabaseConnector {
 			statement.executeUpdate();
 		}
 	}
-	public static List<Article> getArticlesByBoardName(Connection connection, String boardName) throws SQLException {
-	    List<Article> articles = new ArrayList<>();
+	public static ArticleList getArticlesByBoardName(Connection connection, String boardName) throws SQLException {
+		ArticleList articles = new ArticleList();
 	    String sql = "SELECT * FROM Article WHERE boardID IN (SELECT boardID FROM Board WHERE boardName = ?)";
 	    try (PreparedStatement statement = connection.prepareStatement(sql)) {
 	        statement.setString(1, boardName);
@@ -373,7 +381,7 @@ public class DatabaseConnector {
 	            LocalDate createDate = resultSet.getDate("createDate").toLocalDate();
 	            int commentCount = resultSet.getInt("commentCount");
 	            Article article = new Article(articleID, boardID, authorID, title, content, createDate, commentCount);
-	            articles.add(article);
+	            articles.addArticle(article);
 	        }
 	    }
 	    return articles;
