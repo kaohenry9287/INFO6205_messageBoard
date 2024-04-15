@@ -29,7 +29,13 @@ public class ArticleList implements StackList<Article> {
 	}
 	
 	public void addBoard(Article article) {
-		stack.add(article);
+	    stack.add(article);
+	    try {
+	        DatabaseConnector.insertArticleData(connection, article.getArticleId(), article.getAuthorId(),
+	                article.getTitle(), article.getContent());
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
 	}
 
 	@Override

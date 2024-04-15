@@ -57,7 +57,7 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
-                  <AnchorPane layoutX="14.0" layoutY="19.0" prefHeight="498.4" prefWidth="596.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <AnchorPane fx:id="searchAnchorPane" layoutX="14.0" layoutY="19.0" prefHeight="498.4" prefWidth="596.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
                         <Text layoutX="17.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Search Topic" />
                         <TextField fx:id="searchBar" layoutX="105.0" layoutY="17.0" onAction="#search" prefHeight="26.0" prefWidth="474.0" promptText="keywords..." />
@@ -66,16 +66,16 @@
                         <Button fx:id="addarticle" layoutX="434.0" layoutY="453.0" mnemonicParsing="false" onAction="#addArticleButtonClicked" text="+Add Article" />
                      </children>
                   </AnchorPane>
-                  <AnchorPane prefHeight="498.4" prefWidth="596.0" visible="false">
+                  <AnchorPane fx:id="articleAnchorPane" prefHeight="498.4" prefWidth="596.0" visible="false">
                      <children>
                         <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="498.0" prefWidth="596.0">
                           <items>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="176.0" prefWidth="594.0">
                                  <children>
-                                    <Text layoutX="36.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username" />
-                                    <TextArea layoutY="77.0" prefHeight="122.0" prefWidth="594.0" />
+                                    <Text fx:id="articleauthor" layoutX="36.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username" />
+                                    <TextArea fx:id="articleeontent" layoutY="77.0" prefHeight="122.0" prefWidth="594.0" />
                                     <Button layoutX="507.0" layoutY="207.0" mnemonicParsing="false" text="Comment" />
-                                    <Text layoutX="14.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Topic" wrappingWidth="153.6334228515625">
+                                    <Text fx:id="articletopic" layoutX="14.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Topic" wrappingWidth="153.6334228515625">
                                        <font>
                                           <Font size="18.0" />
                                        </font>
@@ -91,7 +91,7 @@
                         </SplitPane>
                      </children>
                   </AnchorPane>
-                  <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="498.4" prefWidth="596.0" visible="false">
+                  <AnchorPane fx:id="commentAnchorPane" layoutX="10.0" layoutY="10.0" prefHeight="498.4" prefWidth="596.0" visible="false">
                      <children>
                         <SplitPane dividerPositions="0.45" layoutX="-9.6" layoutY="-9.6" orientation="VERTICAL" prefHeight="500.0" prefWidth="596.0" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="-10.0">
                            <items>

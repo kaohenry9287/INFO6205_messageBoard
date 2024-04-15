@@ -57,13 +57,13 @@ public class BoardController extends InitialData implements Initializable{
     private Button addarticle;
 	
 	@FXML
-    private Text topicuser;
+	private Text articleauthor;
 
-    @FXML
-    private TextArea topicarticle;
+	@FXML
+	private TextArea articlecontent;
 
-    @FXML
-    private Text topic;
+	@FXML
+	private Text articletopic;
 	
 	@FXML
     private ListView<String> articlelistView;
@@ -187,6 +187,9 @@ public class BoardController extends InitialData implements Initializable{
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 	    try {
+	        // Initialize articleList
+	        articleList = new ArticleList();
+
 	        Connection connection = DatabaseConnector.getDBConnection();
 	        BoardList boardList = DatabaseConnector.getAllBoards(connection);
 	        ObservableList<String> boardNames = FXCollections.observableArrayList();
@@ -195,7 +198,6 @@ public class BoardController extends InitialData implements Initializable{
 	        }
 	        boardListView.setItems(boardNames);
 	        boardListView.setOnMouseClicked(event -> {
-
 	            String selectedBoard = boardListView.getSelectionModel().getSelectedItem();
 	            if (selectedBoard != null) {
 	                try {
@@ -214,44 +216,50 @@ public class BoardController extends InitialData implements Initializable{
 	                }
 	            }
 	        });
-
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
 	}
 
 
-    @FXML 
-    public void search(ActionEvent event) {
-    	articlelistView.getItems().clear();
-        String searchWords = searchBar.getText().toLowerCase(); // Get search keywords
-        List<String> searchResults = searchList(searchWords, articleList.getAllArticles());
-        articlelistView.getItems().addAll(searchResults);
-    }
 
-    private List<String> searchList(String searchWords, List<Article> listOfArticles) {
-        List<String> searchResults = new ArrayList<>();
+	public void search(ActionEvent event) {
+	    if (articleList == null) {
+	        System.out.println("Article list is null!");
+	        return;
+	    }
+	    
+	    articlelistView.getItems().clear();
+	    String searchWords = searchBar.getText().toLowerCase(); // Get search keywords
+	    List<String> searchResults = searchList(searchWords, articleList.getAllArticles());
+	    articlelistView.getItems().addAll(searchResults);
+	}
 
-        for (Article article : listOfArticles) {
-            if (article.getTitle().toLowerCase().contains(searchWords)) {
-                searchResults.add(article.getTitle());
-            }
-        }
+	private List<String> searchList(String searchWords, List<Article> listOfArticles) {
+	    List<String> searchResults = new ArrayList<>();
 
-        return searchResults;
-    }
-    
+	    for (Article article : listOfArticles) {
+	        if (article.getTitle().toLowerCase().contains(searchWords)) { // Modify to search by topic
+	            searchResults.add(article.getTitle());
+	        }
+	    }
 
-    
-    public void handleListViewClick() {
-        nextButton.setDisable(false);
-    }
+	    return searchResults;
+	}
 
     public void goToNextAnchorPane(ActionEvent event) {
-        if (currentAnchorPane == searchAnchorPane) {
+        if (currentAnchorPane != null && currentAnchorPane == searchAnchorPane) {
             currentAnchorPane.setVisible(false);
-            articleAnchorPane.setVisible(true);
-            currentAnchorPane = articleAnchorPane;
+            if (articleAnchorPane != null) {
+                articleAnchorPane.setVisible(true);
+                currentAnchorPane = articleAnchorPane;
+            } else {
+                // Handle the case where articleAnchorPane is null
+                System.out.println("Article anchor pane is null!");
+            }
+        } else {
+            // Handle other cases where currentAnchorPane is null or not equal to searchAnchorPane
+            System.out.println("Current anchor pane is not search anchor pane!");
         }
     }
     @FXML
@@ -260,9 +268,9 @@ public class BoardController extends InitialData implements Initializable{
         if (selectedTitle != null) {
             for (Article article : articleList.getAllArticles()) {
                 if (article.getTitle().equals(selectedTitle)) {
-                    topic.setText(article.getTitle());
-                    topicuser.setText(article.getAuthorId()); // Assuming authorId is the user's username
-                    topicarticle.setText(article.getContent());
+                    articletopic.setText(article.getTitle());
+                    articleauthor.setText(article.getAuthorId()); // Assuming authorId is the user's username
+                    articlecontent.setText(article.getContent());
                     break;
                 }
             }
