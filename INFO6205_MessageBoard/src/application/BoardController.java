@@ -345,8 +345,8 @@ public class BoardController extends InitialData implements Initializable {
 											// Get the author's user name based on the author ID
 											try {
 												String authorId = article.getAuthorId();
-												String authorName = DatabaseConnector.getUserNameByUserId(connection,
-														authorId);
+												String authorName = DatabaseConnector.getUserByID(connection,
+														authorId).getUsername();
 												articleauthor.setText(authorName); // Display the author's user name
 											} catch (SQLException e) {
 												e.printStackTrace();

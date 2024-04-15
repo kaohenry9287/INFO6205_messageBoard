@@ -50,14 +50,6 @@ public class AddArticleController extends InitialData {
         }
 
         try {
-            // Check if the board list is empty
-        	// ???
-            BoardList boardList = getCurrentBoardList();
-            if (boardList.isEmpty()) {
-                System.out.println("No boards available. Please create a board first.");
-                return;
-            }
-
         	// Get boardID and create new article
             Connection connection = DatabaseConnector.getDBConnection();
     		String boardId = DatabaseConnector.getBoardIDbyBoardName(connection, selectedBoard);
