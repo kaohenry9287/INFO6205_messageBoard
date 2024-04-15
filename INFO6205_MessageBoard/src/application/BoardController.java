@@ -206,6 +206,9 @@ public class BoardController extends InitialData implements Initializable{
 	            String selectedBoard = boardListView.getSelectionModel().getSelectedItem();
 	            if (selectedBoard != null) {
 	                try {
+	                	searchAnchorPane.setVisible(true);
+	                    articleAnchorPane.setVisible(false);
+	                    commentAnchorPane.setVisible(false);
 	                    ArticleList articles = DatabaseConnector.getArticlesByBoardName(connection, selectedBoard);
 	                    // Check if articlelistView is not null
 	                    if (articlelistView != null) {
@@ -213,6 +216,23 @@ public class BoardController extends InitialData implements Initializable{
 	                        for (Article article : articles.getAllArticles()) {
 	                            articlelistView.getItems().add(article.getTitle());
 	                        }
+	                        // Set event handler for article selection
+	                        articlelistView.setOnMouseClicked(articleEvent -> {
+	                            String selectedArticleTitle = articlelistView.getSelectionModel().getSelectedItem();
+	                            if (selectedArticleTitle != null) {
+	                                // Iterate through the list of articles to find the selected article
+	                                for (Article article : articles.getAllArticles()) {
+	                                    if (article.getTitle().equals(selectedArticleTitle)) {
+	                                        // Display article details
+	                                        articletopic.setText(article.getTitle());
+	                                        articleauthor.setText(article.getAuthorId());
+	                                        articlecontent.setText(article.getContent());
+	                                        break; // Exit the loop once the article is found
+	                                    }
+	                                }
+	                            }
+	                        });
+
 	                    } else {
 	                        System.out.println("articlelistView is null");
 	                    }
@@ -261,18 +281,33 @@ public class BoardController extends InitialData implements Initializable{
             System.out.println("Article anchor pane is null!");
         }
     }
-    @FXML
-    void displayArticleDetails(ActionEvent event) {
-        String selectedTitle = articlelistView.getSelectionModel().getSelectedItem();
-        if (selectedTitle != null) {
-            for (Article article : articleList.getAllArticles()) {
-                if (article.getTitle().equals(selectedTitle)) {
-                    articletopic.setText(article.getTitle());
-                    articleauthor.setText(article.getAuthorId()); // Assuming authorId is the user's username
-                    articlecontent.setText(article.getContent());
-                    break;
-                }
-            }
-        }
-    }
+	public void displayArticleDetails(ActionEvent event) {
+	    String selectedTitle = articlelistView.getSelectionModel().getSelectedItem();
+	    if (selectedTitle != null) {
+	        try {
+	            String selectedBoard = boardListView.getSelectionModel().getSelectedItem();
+	            if (selectedBoard != null) {
+	                Connection connection = DatabaseConnector.getDBConnection();
+	                if (connection != null) {
+	                    ArticleList articles = DatabaseConnector.getArticlesByBoardName(connection, selectedBoard);
+	                    for (Article article : articles.getAllArticles()) {
+	                        if (article.getTitle().equals(selectedTitle)) {
+	                            articletopic.setText(article.getTitle());
+	                            articleauthor.setText(article.getAuthorId());
+	                            articlecontent.setText(article.getContent());
+	                            break;
+	                        }
+	                    }
+	                } else {
+	                    System.out.println("Failed to establish connection to the database.");
+	                }
+	            } else {
+	                System.out.println("No board selected.");
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	}
+
 }

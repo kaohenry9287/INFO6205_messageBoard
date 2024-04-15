@@ -61,7 +61,7 @@
                      <children>
                         <Text layoutX="17.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Search Topic" />
                         <TextField fx:id="searchBar" layoutX="105.0" layoutY="17.0" onAction="#search" prefHeight="26.0" prefWidth="474.0" promptText="keywords..." />
-                        <ListView fx:id="articlelistView" fixedCellSize="75.0" layoutX="17.0" layoutY="72.0" prefHeight="354.0" prefWidth="566.0" />
+                        <ListView fx:id="articlelistView" fixedCellSize="75.0" layoutX="17.0" layoutY="72.0" onEditStart="#displayArticleDetails" prefHeight="354.0" prefWidth="566.0" />
                         <Button fx:id="nextButton" layoutX="529.0" layoutY="453.0" mnemonicParsing="false" onAction="#goToNextAnchorPane" text="Click" />
                         <Button fx:id="addarticle" layoutX="434.0" layoutY="453.0" mnemonicParsing="false" onAction="#addArticleButtonClicked" text="+Add Article" />
                      </children>
@@ -73,7 +73,7 @@
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="176.0" prefWidth="594.0">
                                  <children>
                                     <Text fx:id="articleauthor" layoutX="36.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username" />
-                                    <TextArea fx:id="articleeontent" layoutY="77.0" prefHeight="122.0" prefWidth="594.0" />
+                                    <TextArea fx:id="articlecontent" editable="false" layoutY="77.0" prefHeight="122.0" prefWidth="594.0" />
                                     <Button layoutX="507.0" layoutY="207.0" mnemonicParsing="false" text="Comment" />
                                     <Text fx:id="articletopic" layoutX="14.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Topic" wrappingWidth="153.6334228515625">
                                        <font>
