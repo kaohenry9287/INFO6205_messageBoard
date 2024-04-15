@@ -59,11 +59,12 @@
                <children>
                   <AnchorPane fx:id="searchAnchorPane" layoutX="14.0" layoutY="19.0" prefHeight="498.4" prefWidth="596.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Text layoutX="17.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Search Topic" />
-                        <TextField fx:id="searchBar" layoutX="105.0" layoutY="17.0" onAction="#search" prefHeight="26.0" prefWidth="474.0" promptText="keywords..." />
+                        <Text layoutX="17.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Search Topic" />
+                        <TextField fx:id="searchBar" layoutX="105.0" layoutY="19.0" onAction="#search" prefHeight="26.0" prefWidth="413.0" promptText="keywords..." />
                         <ListView fx:id="articlelistView" fixedCellSize="75.0" layoutX="17.0" layoutY="72.0" prefHeight="354.0" prefWidth="566.0" />
                         <Button fx:id="nextButton" layoutX="529.0" layoutY="453.0" mnemonicParsing="false" onAction="#goToNextAnchorPane" text="Click" />
                         <Button fx:id="addarticle" layoutX="434.0" layoutY="453.0" mnemonicParsing="false" onAction="#addArticleButtonClicked" text="+Add Article" />
+                        <Button fx:id="searchArticleButton" layoutX="523.0" layoutY="19.0" mnemonicParsing="false" onAction="#searchArticleButtonClicked" text="Search" />
                      </children>
                   </AnchorPane>
                   <AnchorPane fx:id="articleAnchorPane" prefHeight="498.4" prefWidth="596.0" visible="false">
