@@ -220,18 +220,24 @@ public class BoardController extends InitialData implements Initializable{
 	                        articlelistView.setOnMouseClicked(articleEvent -> {
 	                            String selectedArticleTitle = articlelistView.getSelectionModel().getSelectedItem();
 	                            if (selectedArticleTitle != null) {
-	                                // Iterate through the list of articles to find the selected article
 	                                for (Article article : articles.getAllArticles()) {
 	                                    if (article.getTitle().equals(selectedArticleTitle)) {
-	                                        // Display article details
 	                                        articletopic.setText(article.getTitle());
-	                                        articleauthor.setText(article.getAuthorId());
+	                                        // Get the author's user name based on the author ID
+	                                        try {
+	                                            String authorId = article.getAuthorId();
+	                                            String authorName = DatabaseConnector.getUserNameByUserId(connection, authorId);
+	                                            articleauthor.setText(authorName); // Display the author's user name
+	                                        } catch (SQLException e) {
+	                                            e.printStackTrace();
+	                                        }
 	                                        articlecontent.setText(article.getContent());
-	                                        break; // Exit the loop once the article is found
+	                                        break;
 	                                    }
 	                                }
 	                            }
 	                        });
+
 
 	                    } else {
 	                        System.out.println("articlelistView is null");
@@ -273,40 +279,14 @@ public class BoardController extends InitialData implements Initializable{
 	}
 
 	public void goToNextAnchorPane(ActionEvent event) {
-        if (articleAnchorPane != null) {
-            searchAnchorPane.setVisible(false);
-            articleAnchorPane.setVisible(true);
-        } else {
-            // Handle the case where articleAnchorPane is null
-            System.out.println("Article anchor pane is null!");
-        }
-    }
-	public void displayArticleDetails(ActionEvent event) {
-	    String selectedTitle = articlelistView.getSelectionModel().getSelectedItem();
-	    if (selectedTitle != null) {
-	        try {
-	            String selectedBoard = boardListView.getSelectionModel().getSelectedItem();
-	            if (selectedBoard != null) {
-	                Connection connection = DatabaseConnector.getDBConnection();
-	                if (connection != null) {
-	                    ArticleList articles = DatabaseConnector.getArticlesByBoardName(connection, selectedBoard);
-	                    for (Article article : articles.getAllArticles()) {
-	                        if (article.getTitle().equals(selectedTitle)) {
-	                            articletopic.setText(article.getTitle());
-	                            articleauthor.setText(article.getAuthorId());
-	                            articlecontent.setText(article.getContent());
-	                            break;
-	                        }
-	                    }
-	                } else {
-	                    System.out.println("Failed to establish connection to the database.");
-	                }
-	            } else {
-	                System.out.println("No board selected.");
-	            }
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
+		String selectedArticleTitle = articlelistView.getSelectionModel().getSelectedItem();
+	    if (selectedArticleTitle != null) {
+	        // Article is selected, proceed to switch anchor panes
+	        searchAnchorPane.setVisible(false);
+	        articleAnchorPane.setVisible(true);
+	    } else {
+	        // No article selected, display a message or handle the case as needed
+	        System.out.println("Please select an article before proceeding.");
 	    }
 	}
 
