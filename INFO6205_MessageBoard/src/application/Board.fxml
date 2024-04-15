@@ -18,7 +18,7 @@
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-background-color: FFFBD5;">
                <children>
-                  <ListView fx:id="boardListView" fixedCellSize="50.0" layoutX="-3.0" layoutY="97.0" prefHeight="301.0" prefWidth="197.0" style="-fx-control-inner-background: FFFBD5" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="97.0" />
+                  <ListView fx:id="boardListView" fixedCellSize="50.0" layoutX="-3.0" layoutY="97.0" onEditStart="#displayArticleDetails" prefHeight="301.0" prefWidth="197.0" style="-fx-control-inner-background: FFFBD5" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="97.0" />
                   <Button fx:id="logoutButton" layoutX="9.0" layoutY="457.0" mnemonicParsing="false" onAction="#logoutButtonClicked" prefHeight="29.0" prefWidth="169.0" text="&lt;&lt; Logout">
                      <font>
                         <Font name="October Compressed Tamil Black" size="13.0" />
@@ -61,7 +61,7 @@
                      <children>
                         <Text layoutX="17.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Search Topic" />
                         <TextField fx:id="searchBar" layoutX="105.0" layoutY="17.0" onAction="#search" prefHeight="26.0" prefWidth="474.0" promptText="keywords..." />
-                        <ListView fixedCellSize="75.0" layoutX="17.0" layoutY="72.0" prefHeight="354.0" prefWidth="566.0" />
+                        <ListView fx:id="articlelistView" fixedCellSize="75.0" layoutX="17.0" layoutY="72.0" prefHeight="354.0" prefWidth="566.0" />
                         <Button fx:id="nextButton" layoutX="529.0" layoutY="453.0" mnemonicParsing="false" onAction="#goToNextAnchorPane" text="Click" />
                         <Button fx:id="addarticle" layoutX="434.0" layoutY="453.0" mnemonicParsing="false" onAction="#addArticleButtonClicked" text="+Add Article" />
                      </children>

@@ -66,7 +66,8 @@ public class BoardController extends InitialData implements Initializable{
     private Text topic;
 	
 	@FXML
-    private ListView<String> listView;
+    private ListView<String> articlelistView;
+	
 	private ArticleList articleList;
 	private AnchorPane currentAnchorPane;
     private AnchorPane searchAnchorPane; 
@@ -183,29 +184,49 @@ public class BoardController extends InitialData implements Initializable{
 		newStage.show();
 	}
 	
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
-        try {
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+	    try {
 	        Connection connection = DatabaseConnector.getDBConnection();
-            BoardList boardList = DatabaseConnector.getAllBoards(connection);
-            ObservableList<String> boardNames = FXCollections.observableArrayList();
-            for (Board board : boardList.getAllBoards()) {
-                boardNames.add(board.getBoardName());
-            }
-            boardListView.setItems(boardNames);
+	        BoardList boardList = DatabaseConnector.getAllBoards(connection);
+	        ObservableList<String> boardNames = FXCollections.observableArrayList();
+	        for (Board board : boardList.getAllBoards()) {
+	            boardNames.add(board.getBoardName());
+	        }
+	        boardListView.setItems(boardNames);
+	        boardListView.setOnMouseClicked(event -> {
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        
-    }
+	            String selectedBoard = boardListView.getSelectionModel().getSelectedItem();
+	            if (selectedBoard != null) {
+	                try {
+	                    List<Article> articles = DatabaseConnector.getArticlesByBoardName(connection, selectedBoard);
+	                    // Check if articlelistView is not null
+	                    if (articlelistView != null) {
+	                        articlelistView.getItems().clear();
+	                        for (Article article : articles) {
+	                            articlelistView.getItems().add(article.getTitle());
+	                        }
+	                    } else {
+	                        System.out.println("articlelistView is null");
+	                    }
+	                } catch (SQLException e) {
+	                    e.printStackTrace();
+	                }
+	            }
+	        });
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+
+
     @FXML 
     public void search(ActionEvent event) {
-        listView.getItems().clear();
+    	articlelistView.getItems().clear();
         String searchWords = searchBar.getText().toLowerCase(); // Get search keywords
         List<String> searchResults = searchList(searchWords, articleList.getAllArticles());
-        listView.getItems().addAll(searchResults);
+        articlelistView.getItems().addAll(searchResults);
     }
 
     private List<String> searchList(String searchWords, List<Article> listOfArticles) {
@@ -235,7 +256,7 @@ public class BoardController extends InitialData implements Initializable{
     }
     @FXML
     void displayArticleDetails(ActionEvent event) {
-        String selectedTitle = listView.getSelectionModel().getSelectedItem();
+        String selectedTitle = articlelistView.getSelectionModel().getSelectedItem();
         if (selectedTitle != null) {
             for (Article article : articleList.getAllArticles()) {
                 if (article.getTitle().equals(selectedTitle)) {
@@ -246,5 +267,5 @@ public class BoardController extends InitialData implements Initializable{
                 }
             }
         }
-    }  
+    }
 }

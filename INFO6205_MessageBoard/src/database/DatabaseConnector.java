@@ -358,5 +358,24 @@ public class DatabaseConnector {
 			statement.executeUpdate();
 		}
 	}
-
+	public static List<Article> getArticlesByBoardName(Connection connection, String boardName) throws SQLException {
+	    List<Article> articles = new ArrayList<>();
+	    String sql = "SELECT * FROM Article WHERE boardID IN (SELECT boardID FROM Board WHERE boardName = ?)";
+	    try (PreparedStatement statement = connection.prepareStatement(sql)) {
+	        statement.setString(1, boardName);
+	        ResultSet resultSet = statement.executeQuery();
+	        while (resultSet.next()) {
+	            String articleID = resultSet.getString("articleID");
+	            String boardID = resultSet.getString("boardID");
+	            String authorID = resultSet.getString("authorID");
+	            String title = resultSet.getString("title");
+	            String content = resultSet.getString("content");
+	            LocalDate createDate = resultSet.getDate("createDate").toLocalDate();
+	            int commentCount = resultSet.getInt("commentCount");
+	            Article article = new Article(articleID, boardID, authorID, title, content, createDate, commentCount);
+	            articles.add(article);
+	        }
+	    }
+	    return articles;
+	}
 }
