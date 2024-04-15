@@ -16,12 +16,11 @@ public class Comment {
 	private Timestamp createDate;
 
 	// Constructor for new comment
-	public Comment(String articleID, String authorID, String content, Timestamp createDate) {
+	public Comment(String articleID, String authorID, String content) {
 		this.commentID = UUID.randomUUID();
 		this.articleID = articleID;
 		this.authorID = authorID;
 		this.content = content;
-		this.createDate = createDate;
 	}
 
 	// Constructor for existed comment

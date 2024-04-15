@@ -219,6 +219,23 @@ public class DatabaseConnector {
 		return unreadComments;
 	}
 
+	// Method to retrieve a User object by userID
+	public static User getUserByID(Connection connection, String userID) throws SQLException {
+		String sql = "SELECT * FROM User WHERE userID = ?";
+		try (PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setString(1, userID);
+			try (ResultSet resultSet = statement.executeQuery()) {
+				if (resultSet.next()) {
+					String username = resultSet.getString("userName");
+					String password = resultSet.getString("password");
+					return new User(userID, username, password);
+				}
+			}
+		}
+		// If no user found with the given userID, return null
+		return null;
+	}
+
 	// Insert Board
 	public static void insertBoardData(Connection connection, String boardName) throws SQLException {
 		String sqlSelect = "SELECT MAX(CAST(boardID AS UNSIGNED)) FROM Board";
@@ -277,8 +294,7 @@ public class DatabaseConnector {
 				int commentCount = resultSet.getInt("commentCount");
 
 				// Add the board to the list
-				Article article = new Article(articleID, boardID, authorID, title, content, createDate,
-						commentCount);
+				Article article = new Article(articleID, boardID, authorID, title, content, createDate, commentCount);
 				articleList.addArticle(article);
 			}
 		} catch (SQLException e) {
@@ -332,10 +348,9 @@ public class DatabaseConnector {
 			statement.setString(3, authorID);
 			statement.setString(4, content);
 
-
 			// Execute the SQL statement
 			statement.executeUpdate();
-			
+
 			System.out.println("Insert comment success!");
 		}
 
@@ -433,7 +448,7 @@ public class DatabaseConnector {
 				String authorID = resultSet.getString("authorID");
 				String title = resultSet.getString("title");
 				String content = resultSet.getString("content");
-				LocalDate createDate = resultSet.getDate("createDate").toLocalDate();
+				Timestamp createDate = resultSet.getTimestamp("createDate");
 				int commentCount = resultSet.getInt("commentCount");
 				Article article = new Article(articleID, boardID, authorID, title, content, createDate, commentCount);
 				articles.addArticle(article);
@@ -455,7 +470,7 @@ public class DatabaseConnector {
 				String authorID = resultSet.getString("authorID");
 				String title = resultSet.getString("title");
 				String content = resultSet.getString("content");
-				LocalDate createDate = resultSet.getDate("createDate").toLocalDate();
+				Timestamp createDate = resultSet.getTimestamp("createDate");
 				int commentCount = resultSet.getInt("commentCount");
 				Article article = new Article(articleID, boardID, authorID, title, content, createDate, commentCount);
 				articles.addArticle(article);

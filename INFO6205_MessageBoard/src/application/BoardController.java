@@ -73,6 +73,9 @@ public class BoardController extends InitialData implements Initializable {
 
 	@FXML
 	private Button searchArticleButton;
+	
+	@FXML
+	private TextArea commentTextArea;
 
 	@FXML
 	private ListView<String> articlelistView;

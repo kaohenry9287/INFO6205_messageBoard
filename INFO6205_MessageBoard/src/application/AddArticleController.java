@@ -42,7 +42,6 @@ public class AddArticleController extends InitialData {
     public void createButtonClicked(ActionEvent event) throws SQLException {
         String topic = topicfield.getText();
         String content = contentfield.getText();
-        LocalDate createDate = LocalDate.now(); // Assuming article creation date is current date
 
         // Check if topic or content is empty
         if (topic.isEmpty() || content.isEmpty()) {
@@ -63,7 +62,7 @@ public class AddArticleController extends InitialData {
             Connection connection = DatabaseConnector.getDBConnection();
     		String boardId = DatabaseConnector.getBoardIDbyBoardName(connection, selectedBoard);
             // Push the new article onto the stack
-            Article newArticle = new Article(boardId, getCurrentUser().getId(), topic, content, createDate);
+            Article newArticle = new Article(boardId, getCurrentUser().getId(), topic, content);
             ArticleList articles = DatabaseConnector.getArticlesByBoardName(connection, selectedBoard);
             System.out.println(articles.getAllArticles());
             System.out.println(newArticle.getAuthorId());
