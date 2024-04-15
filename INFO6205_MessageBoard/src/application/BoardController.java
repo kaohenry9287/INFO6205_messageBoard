@@ -427,14 +427,13 @@ public class BoardController extends InitialData implements Initializable {
 
 	public void goToNextAnchorPane(ActionEvent event) {
 
-		String selectedTitle = articlelistView.getSelectionModel().getSelectedItem();
-		if (articleAnchorPane != null) {
-			searchAnchorPane.setVisible(false);
-			articleAnchorPane.setVisible(true);
-		} else {
-			// Handle the case where articleAnchorPane is null
-			System.out.println("Article anchor pane is null!");
-		}
+		String selectedArticleTitle = articlelistView.getSelectionModel().getSelectedItem();
+	    if (selectedArticleTitle != null) {
+	        searchAnchorPane.setVisible(false);
+	        commentAnchorPane.setVisible(true);
+	    } else {
+	        System.out.println("Please select an article before proceeding.");
+	    }
 	}
 
 }
