@@ -98,5 +98,4 @@ public class AddBoardController extends InitialData {
         currentStage.close();
 		
 	}
-	
 }

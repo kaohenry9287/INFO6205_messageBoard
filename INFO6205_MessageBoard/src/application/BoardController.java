@@ -73,7 +73,7 @@ public class BoardController extends InitialData implements Initializable {
 
 	@FXML
 	private Button searchArticleButton;
-	
+
 	@FXML
 	private TextArea commentTextArea;
 
@@ -82,7 +82,7 @@ public class BoardController extends InitialData implements Initializable {
 
 	@FXML
 	private ListView<String> commentListView;
-	
+
 	// Define a boolean variable to track the current sorting order
 	private boolean ascendingOrder = true;
 
@@ -99,7 +99,6 @@ public class BoardController extends InitialData implements Initializable {
 		articleAnchorPane.setVisible(false);
 		commentAnchorPane.setVisible(false);
 	}
-
 
 	public void setUsername(String username) {
 		usernameText.setText(username);
@@ -224,32 +223,30 @@ public class BoardController extends InitialData implements Initializable {
 		newStage.show();
 	}
 
-
 	@FXML
 	public void commentSortButtonClicked(ActionEvent event) throws SQLException {
-	    try {
-	        // Get the current list of comments
-	        CommentList commentList = getCurrentCommentList();
-	        List<Comment> comments = commentList.getAllComments();
+		try {
+			// Get the current list of comments
+			CommentList commentList = getCurrentCommentList();
+			List<Comment> comments = commentList.getAllComments();
 
-	        // Toggle the sorting order
-	        ascendingOrder = !ascendingOrder; // Toggle the sorting order
+			// Toggle the sorting order
+			ascendingOrder = !ascendingOrder; // Toggle the sorting order
 
-	        // Sort the comments based on the current order
-	        comments = commentList.sort(ascendingOrder);
+			// Sort the comments based on the current order
+			comments = commentList.sort(ascendingOrder);
 
-	        // Show sorted comments on screen
-	        ObservableList<String> sortedComments = FXCollections.observableArrayList();
-	        for (Comment comment : comments) {
-	            sortedComments.add(comment.getFormattedComment());
-	        }
-	        commentListView.setItems(sortedComments);
-	        
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
+			// Show sorted comments on screen
+			ObservableList<String> sortedComments = FXCollections.observableArrayList();
+			for (Comment comment : comments) {
+				sortedComments.add(comment.getFormattedComment());
+			}
+			commentListView.setItems(sortedComments);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-
 
 	// Event handler for the "Comment" button
 	@FXML
@@ -322,7 +319,53 @@ public class BoardController extends InitialData implements Initializable {
 			for (Board board : boardList.getAllBoards()) {
 				boardNames.add(board.getBoardName());
 			}
+
 			boardListView.setItems(boardNames);
+			boardListView.setOnMouseClicked(event -> {
+				String selectedBoard = boardListView.getSelectionModel().getSelectedItem();
+				if (selectedBoard != null) {
+					try {
+						searchAnchorPane.setVisible(true);
+						articleAnchorPane.setVisible(false);
+						commentAnchorPane.setVisible(false);
+						ArticleList articles = DatabaseConnector.getArticlesByBoardName(connection, selectedBoard);
+						// Check if articlelistView is not null
+						if (articlelistView != null) {
+							articlelistView.getItems().clear();
+							for (Article article : articles.getAllArticles()) {
+								articlelistView.getItems().add(article.getTitle());
+							}
+							// Set event handler for article selection
+							articlelistView.setOnMouseClicked(articleEvent -> {
+								String selectedArticleTitle = articlelistView.getSelectionModel().getSelectedItem();
+								if (selectedArticleTitle != null) {
+									for (Article article : articles.getAllArticles()) {
+										if (article.getTitle().equals(selectedArticleTitle)) {
+											articletopic.setText(article.getTitle());
+											// Get the author's user name based on the author ID
+											try {
+												String authorId = article.getAuthorId();
+												String authorName = DatabaseConnector.getUserNameByUserId(connection,
+														authorId);
+												articleauthor.setText(authorName); // Display the author's user name
+											} catch (SQLException e) {
+												e.printStackTrace();
+											}
+											articlecontent.setText(article.getContent());
+											break;
+										}
+									}
+								}
+							});
+
+						} else {
+							System.out.println("articlelistView is null");
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+			});
 
 			boardListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
 				int selectedBoardIndex = boardListView.getSelectionModel().getSelectedIndex();
@@ -380,27 +423,13 @@ public class BoardController extends InitialData implements Initializable {
 
 	public void goToNextAnchorPane(ActionEvent event) {
 
+		String selectedTitle = articlelistView.getSelectionModel().getSelectedItem();
 		if (articleAnchorPane != null) {
 			searchAnchorPane.setVisible(false);
 			articleAnchorPane.setVisible(true);
 		} else {
 			// Handle the case where articleAnchorPane is null
 			System.out.println("Article anchor pane is null!");
-		}
-	}
-
-	@FXML
-	void displayArticleDetails(ActionEvent event) {
-		String selectedTitle = articlelistView.getSelectionModel().getSelectedItem();
-		if (selectedTitle != null) {
-			for (Article article : articleList.getAllArticles()) {
-				if (article.getTitle().equals(selectedTitle)) {
-					articletopic.setText(article.getTitle());
-					articleauthor.setText(article.getAuthorId()); // Assuming authorId is the user's username
-					articlecontent.setText(article.getContent());
-					break;
-				}
-			}
 		}
 	}
 

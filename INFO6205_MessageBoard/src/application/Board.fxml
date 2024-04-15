@@ -18,7 +18,7 @@
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-background-color: FFFBD5;">
                <children>
-                  <ListView fx:id="boardListView" fixedCellSize="50.0" layoutX="-3.0" layoutY="97.0" onEditStart="#displayArticleDetails" prefHeight="301.0" prefWidth="197.0" style="-fx-control-inner-background: FFFBD5" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="97.0" />
+                  <ListView fx:id="boardListView" fixedCellSize="50.0" layoutX="-3.0" layoutY="97.0" prefHeight="301.0" prefWidth="197.0" style="-fx-control-inner-background: FFFBD5" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="97.0" />
                   <Button fx:id="logoutButton" layoutX="9.0" layoutY="457.0" mnemonicParsing="false" onAction="#logoutButtonClicked" prefHeight="29.0" prefWidth="169.0" text="&lt;&lt; Logout">
                      <font>
                         <Font name="October Compressed Tamil Black" size="13.0" />
@@ -74,7 +74,7 @@
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="176.0" prefWidth="594.0">
                                  <children>
                                     <Text fx:id="articleauthor" layoutX="36.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username" />
-                                    <TextArea fx:id="articleeontent" layoutY="77.0" prefHeight="122.0" prefWidth="594.0" />
+                                    <TextArea fx:id="articlecontent" editable="false" layoutY="77.0" prefHeight="122.0" prefWidth="594.0" />
                                     <Button layoutX="507.0" layoutY="207.0" mnemonicParsing="false" text="Comment" />
                                     <Text fx:id="articletopic" layoutX="14.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Topic" wrappingWidth="153.6334228515625">
                                        <font>
