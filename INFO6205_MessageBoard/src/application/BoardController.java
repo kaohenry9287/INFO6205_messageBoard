@@ -69,16 +69,15 @@ public class BoardController extends InitialData implements Initializable{
     private ListView<String> articlelistView;
 	
 	private ArticleList articleList;
-	private AnchorPane currentAnchorPane;
-    private AnchorPane searchAnchorPane; 
-    private AnchorPane articleAnchorPane; 
+	@FXML
+    private AnchorPane searchAnchorPane;
+	@FXML
+    private AnchorPane articleAnchorPane;
+	@FXML
     private AnchorPane commentAnchorPane;
 	
 	public void initData(User user) {
 		setCurrentUser(user);
-        currentAnchorPane = searchAnchorPane;
-        articleAnchorPane.setVisible(false);
-        commentAnchorPane.setVisible(false);
 	}
 	
     public void setUsername(String username) {
@@ -189,6 +188,9 @@ public class BoardController extends InitialData implements Initializable{
 	    try {
 	        // Initialize articleList
 	        articleList = new ArticleList();
+	        searchAnchorPane.setVisible(true);
+	        articleAnchorPane.setVisible(false);
+	        commentAnchorPane.setVisible(false);
 
 	        Connection connection = DatabaseConnector.getDBConnection();
 	        BoardList boardList = DatabaseConnector.getAllBoards(connection);
@@ -247,19 +249,13 @@ public class BoardController extends InitialData implements Initializable{
 	    return searchResults;
 	}
 
-    public void goToNextAnchorPane(ActionEvent event) {
-        if (currentAnchorPane != null && currentAnchorPane == searchAnchorPane) {
-            currentAnchorPane.setVisible(false);
-            if (articleAnchorPane != null) {
-                articleAnchorPane.setVisible(true);
-                currentAnchorPane = articleAnchorPane;
-            } else {
-                // Handle the case where articleAnchorPane is null
-                System.out.println("Article anchor pane is null!");
-            }
+	public void goToNextAnchorPane(ActionEvent event) {
+        if (articleAnchorPane != null) {
+            searchAnchorPane.setVisible(false);
+            articleAnchorPane.setVisible(true);
         } else {
-            // Handle other cases where currentAnchorPane is null or not equal to searchAnchorPane
-            System.out.println("Current anchor pane is not search anchor pane!");
+            // Handle the case where articleAnchorPane is null
+            System.out.println("Article anchor pane is null!");
         }
     }
     @FXML
