@@ -11,7 +11,6 @@ import application.Comment;
 
 import java.time.LocalDateTime;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -295,8 +294,7 @@ public class DatabaseConnector {
 				int commentCount = resultSet.getInt("commentCount");
 
 				// Add the board to the list
-				Article article = new Article(articleID, boardID, authorID, title, content, createDate,
-						commentCount);
+				Article article = new Article(articleID, boardID, authorID, title, content, createDate, commentCount);
 				articleList.addArticle(article);
 			}
 		} catch (SQLException e) {
@@ -310,7 +308,9 @@ public class DatabaseConnector {
 	// Insert Article
 	public static void insertArticleData(Connection connection, String articleID, String boardID, String authorID,
 			String title, String content) throws SQLException {
-		String sql = "INSERT INTO Article (articleID, boardID, aurhorID, content, createDate, commentCount) VALUES (?, ?, ?, ?, NOW(), 0)";
+
+		// Insert article data
+		String sql = "INSERT INTO Article (articleID, boardID, authorID, title, content, createDate, commentCount) VALUES (?, ?, ?, ?, ?, NOW(), 0)";
 		try (PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, articleID);
 			statement.setString(2, boardID);
@@ -321,10 +321,27 @@ public class DatabaseConnector {
 		}
 	}
 
+	// Get boardID by boardName
+	public static String getBoardIDbyBoardName(Connection connection, String boardName) throws SQLException {
+		String sql = "SELECT boardId FROM Board WHERE boardName = ?";
+		try (PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setString(1, boardName); // Set the boardName parameter
+			ResultSet resultSet = statement.executeQuery();
+
+			if (resultSet.next()) {
+				// Extract boardId from the result set
+				String boardId = resultSet.getString("boardId");
+				return boardId;
+			} else {
+				return null;
+			}
+		}
+	}
+
 	// Insert Comment
 	public static void insertCommentData(Connection connection, String commentID, String articleID, String authorID,
 			String content) throws SQLException {
-		String sql = "INSERT INTO Comment (commentID, articleID, authorID, content) VALUES (?, ?, ?, ?)";
+		String sql = "INSERT INTO Comment (commentID, articleID, authorID, contnent, createDate) VALUES (?, ?, ?, ?, NOW())";
 		try (PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, commentID);
 			statement.setString(2, articleID);
@@ -333,7 +350,7 @@ public class DatabaseConnector {
 
 			// Execute the SQL statement
 			statement.executeUpdate();
-			
+
 			System.out.println("Insert comment success!");
 		}
 
@@ -419,4 +436,46 @@ public class DatabaseConnector {
 		}
 	}
 
+	public static ArticleList getArticlesByBoardName(Connection connection, String boardName) throws SQLException {
+		ArticleList articles = new ArticleList();
+		String sql = "SELECT * FROM Article WHERE boardID IN (SELECT boardID FROM Board WHERE boardName = ?)";
+		try (PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setString(1, boardName);
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				String articleID = resultSet.getString("articleID");
+				String boardID = resultSet.getString("boardID");
+				String authorID = resultSet.getString("authorID");
+				String title = resultSet.getString("title");
+				String content = resultSet.getString("content");
+				Timestamp createDate = resultSet.getTimestamp("createDate");
+				int commentCount = resultSet.getInt("commentCount");
+				Article article = new Article(articleID, boardID, authorID, title, content, createDate, commentCount);
+				articles.addArticle(article);
+			}
+		}
+		return articles;
+	}
+
+	// Get articleList by boardID
+	public static ArticleList getArticlesByBoardId(Connection connection, String boardId) throws SQLException {
+		ArticleList articles = new ArticleList();
+		String sql = "SELECT * FROM Article WHERE boardId IN (SELECT boardId FROM Board WHERE boardId = ?)";
+		try (PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setString(1, boardId);
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				String articleID = resultSet.getString("articleID");
+				String boardID = resultSet.getString("boardID");
+				String authorID = resultSet.getString("authorID");
+				String title = resultSet.getString("title");
+				String content = resultSet.getString("content");
+				Timestamp createDate = resultSet.getTimestamp("createDate");
+				int commentCount = resultSet.getInt("commentCount");
+				Article article = new Article(articleID, boardID, authorID, title, content, createDate, commentCount);
+				articles.addArticle(article);
+			}
+		}
+		return articles;
+	}
 }

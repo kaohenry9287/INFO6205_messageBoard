@@ -117,7 +117,7 @@ public class BoardList implements StackList<Board> {
 		for (Board board : stack) {
 			if (count == givenIndex) {
 				return board;
-			}else {
+			} else {
 				count++;
 			}
 		}

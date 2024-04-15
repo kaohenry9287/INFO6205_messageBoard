@@ -1,7 +1,7 @@
 package application;
 
+import java.util.Collections;
 import database.DatabaseConnector;
-import application.Article;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -21,13 +21,13 @@ public class ArticleList implements StackList<Article> {
 	public void push(Article article) {
 		stack.add(article);
 		try {
-			DatabaseConnector.insertArticleData(connection, article.getAuthorId(), article.getBoardId(),
+			DatabaseConnector.insertArticleData(connection, article.getArticleId(), article.getBoardId(),
 					article.getAuthorId(), article.getTitle(), article.getContent());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void addArticle(Article article) {
 		stack.add(article);
 	}
@@ -104,7 +104,51 @@ public class ArticleList implements StackList<Article> {
 			e.printStackTrace();
 		}
 	}
-	
+
+	public Article getArticlesByBoardID(String givenID) {
+		for (Article article : stack) {
+			if (article.getArticleId().equals(givenID)) {
+				return article;
+			}
+		}
+		return null;
+	}
+
+	// Search articles by articleName using binary search
+	public List<Article> searchByArticleName(String articleName) {
+		// Sort the list of articles by titles
+		Collections.sort(stack, (a1, a2) -> a1.getTitle().compareToIgnoreCase(a2.getTitle()));
+
+		// Perform binary search
+		List<Article> searchResults = new ArrayList<>();
+		int left = 0;
+		int right = stack.size() - 1;
+
+		while (left <= right) {
+			int mid = left + (right - left) / 2;
+			Article midArticle = stack.get(mid);
+			String midTitle = midArticle.getTitle();
+
+			// Check if the middle element's title matches the search keyword
+			if (midTitle.equalsIgnoreCase(articleName)) {
+				searchResults.add(midArticle);
+			}
+
+			// If the search keyword is less than the middle element's title, search in the
+			// left half
+			if (midTitle.compareToIgnoreCase(articleName) > 0) {
+				right = mid - 1;
+			}
+			// If the search keyword is greater than the middle element's title, search in
+			// the right half
+			else {
+				left = mid + 1;
+			}
+		}
+
+		return searchResults;
+	}
+
 	// Method to get Article by ID
 	public Article getArticleByID(String givenID) {
 		for (Article article : stack) {

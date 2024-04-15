@@ -1,9 +1,7 @@
 package application;
 
 import java.util.UUID;
-
 import database.DatabaseConnector;
-
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;

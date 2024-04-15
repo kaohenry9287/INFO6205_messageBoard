@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<Pane minHeight="500.0" minWidth="800.0" style="-fx-background-color: FFFBD5;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.AddArticleController">
+   <children>
+      <TextField fx:id="topicfield" layoutX="325.0" layoutY="125.0" />
+      <Text layoutX="196.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add New Article" textAlignment="CENTER" wrappingWidth="408.0902404785156">
+         <font>
+            <Font name="October Condensed Tamil Black" size="24.0" />
+         </font>
+      </Text>
+      <Text layoutX="378.0" layoutY="111.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Topic" wrappingWidth="42.09100341796875">
+         <font>
+            <Font name="October Condensed Tamil Heavy" size="16.0" />
+         </font>
+      </Text>
+      <Button fx:id="createButton" layoutX="321.0" layoutY="403.0" mnemonicParsing="false" onAction="#createButtonClicked" prefHeight="27.0" prefWidth="159.0" text="Create">
+         <font>
+            <Font name="October Condensed Tamil Heavy" size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="backBtn" layoutX="24.0" layoutY="24.0" mnemonicParsing="false" onAction="#handleBack" text="&lt;&lt; Back">
+         <font>
+            <Font name="October Condensed Tamil Heavy" size="12.0" />
+         </font>
+      </Button>
+      <Text layoutX="370.0" layoutY="173.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Content" wrappingWidth="60.19726562500006">
+         <font>
+            <Font name="October Condensed Tamil Heavy" size="16.0" />
+         </font>
+      </Text>
+      <TextArea fx:id="contentfield" layoutX="300.0" layoutY="187.0" prefHeight="200.0" prefWidth="200.0" />
+   </children>
+</Pane>

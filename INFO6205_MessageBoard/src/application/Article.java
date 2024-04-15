@@ -15,12 +15,12 @@ public class Article {
 	private int commentCount;
 	
 	// Constructor for new article
-	public Article (String boardID, String authorID, String title, String content, Timestamp createDate) {
+	public Article (String boardID, String authorID, String title, String content) {
 		this.articleID = UUID.randomUUID();
+		this.boardID = boardID;
 		this.authorID = authorID;
 		this.title = title;
 		this.content = content;
-		this.createDate = createDate;
 	}
 	
 	// Constructor for existed article
