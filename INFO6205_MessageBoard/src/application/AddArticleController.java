@@ -1,8 +1,12 @@
 package application;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 
+import database.DatabaseConnector;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,14 +30,16 @@ public class AddArticleController extends InitialData {
     private Button createButton;
 
     private ArticleList articleList;
+    
+    private String selectedBoard;
 
-    public void initData(User user, BoardList boardList) {
+    public void initData(User user, BoardList boardList, String selectedBoard) {
         setCurrentUser(user);
         setCurrentBoardList(boardList);
-        this.articleList = new ArticleList();
+        this.selectedBoard = selectedBoard;
     }
 
-    public void createButtonClicked(ActionEvent event) {
+    public void createButtonClicked(ActionEvent event) throws SQLException {
         String topic = topicfield.getText();
         String content = contentfield.getText();
         LocalDate createDate = LocalDate.now(); // Assuming article creation date is current date
@@ -46,16 +52,22 @@ public class AddArticleController extends InitialData {
 
         try {
             // Check if the board list is empty
+        	// ???
             BoardList boardList = getCurrentBoardList();
             if (boardList.isEmpty()) {
                 System.out.println("No boards available. Please create a board first.");
                 return;
             }
 
+        	// Get boardID and create new article
+            Connection connection = DatabaseConnector.getDBConnection();
+    		String boardId = DatabaseConnector.getBoardIDbyBoardName(connection, selectedBoard);
             // Push the new article onto the stack
-            String boardId = boardList.peek().getBoardId(); // Get the ID of the latest board
             Article newArticle = new Article(boardId, getCurrentUser().getId(), topic, content, createDate);
-            articleList.push(newArticle);
+            ArticleList articles = DatabaseConnector.getArticlesByBoardName(connection, selectedBoard);
+            System.out.println(articles.getAllArticles());
+            System.out.println(newArticle.getAuthorId());
+            articles.push(newArticle);
 
             // Navigate to the next page
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Board.fxml"));

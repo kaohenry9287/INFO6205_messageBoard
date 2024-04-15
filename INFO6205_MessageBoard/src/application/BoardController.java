@@ -143,11 +143,14 @@ public class BoardController extends InitialData implements Initializable{
 	        return;
 	    }
 	    
+	    
+        String selectedBoard = boardListView.getSelectionModel().getSelectedItem();
 	    FXMLLoader loader = new FXMLLoader(getClass().getResource("AddArticle.fxml"));
 	    Parent root = (Parent) loader.load();
 
 	    AddArticleController addArticleController = loader.getController();
-	    addArticleController.initData(getCurrentUser(), getCurrentBoardList());
+	    addArticleController.initData(getCurrentUser(), getCurrentBoardList(), selectedBoard);
+
 	    
 	    // Close the current stage
 	    Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -201,11 +204,11 @@ public class BoardController extends InitialData implements Initializable{
 	            String selectedBoard = boardListView.getSelectionModel().getSelectedItem();
 	            if (selectedBoard != null) {
 	                try {
-	                    List<Article> articles = DatabaseConnector.getArticlesByBoardName(connection, selectedBoard);
+	                    ArticleList articles = DatabaseConnector.getArticlesByBoardName(connection, selectedBoard);
 	                    // Check if articlelistView is not null
 	                    if (articlelistView != null) {
 	                        articlelistView.getItems().clear();
-	                        for (Article article : articles) {
+	                        for (Article article : articles.getAllArticles()) {
 	                            articlelistView.getItems().add(article.getTitle());
 	                        }
 	                    } else {

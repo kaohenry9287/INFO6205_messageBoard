@@ -16,6 +16,7 @@ public class Article {
 	// Constructor for new article
 	public Article (String boardID, String authorID, String title, String content, LocalDate createDate) {
 		this.articleID = UUID.randomUUID();
+		this.boardID = boardID;
 		this.authorID = authorID;
 		this.title = title;
 		this.content = content;
