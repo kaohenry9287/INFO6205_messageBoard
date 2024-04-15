@@ -51,39 +51,44 @@ public class CommentList implements StackList<Comment> {
 	//sort based on created date
 	@Override
 	public List<Comment> sort(boolean ascending) {
-		// no need to sort: empty or only one comment
-		if (isEmpty() || stack.size() == 1) {
-			return stack;
-		}
-		
-		int n = stack.size();
-		Comment[] comments = stack.toArray(new Comment[0]);
-		// ascending sort using bubble sort
-		if (ascending) {
-			for (int i = 0; i < n - 1; i++) {
-				for (int j = 0; j < n - i - 1; j++) {
-					if (comments[j].getCreateDate().compareTo(comments[j + 1].getCreateDate()) > 0) {
-						Comment temp = comments[j];
-						comments[j] = comments[j + 1];
-						comments[j + 1] = temp;
-					}
-				}
-			}
-		// descending sort using bubble sort
-		} else {
-			for (int i = 0; i < n - 1; i++) {
-				for (int j = 0; j < n - i - 1; j++) {
-					if (comments[j].getCreateDate().compareTo(comments[j + 1].getCreateDate()) <= 0) {
-						Comment temp = comments[j];
-						comments[j] = comments[j + 1];
-						comments[j + 1] = temp;
-					}
-				}
-			}			
-		}
-		
-		stack = new ArrayList<>(Arrays.asList(comments));
-		return stack;
+	    // no need to sort: empty or only one comment
+	    if (isEmpty() || stack.size() == 1) {
+	        return stack;
+	    }
+	    
+	    int n = stack.size();
+	    Comment[] comments = stack.toArray(new Comment[0]);
+	    
+	    // ascending sort using bubble sort
+	    if (ascending) {
+	        for (int i = 0; i < n - 1; i++) {
+	            for (int j = 0; j < n - i - 1; j++) {
+	                if (comments[j].getCreateDate().compareTo(comments[j + 1].getCreateDate()) > 0) {
+	                    // Swap comments[j] with comments[j+1]
+	                    Comment temp = comments[j];
+	                    comments[j] = comments[j + 1];
+	                    comments[j + 1] = temp;
+	                }
+	            }
+	        }
+	    // descending sort using bubble sort
+	    } else {
+	        for (int i = 0; i < n - 1; i++) {
+	            for (int j = 0; j < n - i - 1; j++) {
+	                if (comments[j].getCreateDate().compareTo(comments[j + 1].getCreateDate()) < 0) {
+	                    // Swap comments[j] with comments[j+1]
+	                    Comment temp = comments[j];
+	                    comments[j] = comments[j + 1];
+	                    comments[j + 1] = temp;
+	                }
+	            }
+	        }            
+	    }
+	    
+	    // Update the stack with sorted comments
+	    stack = new ArrayList<>(Arrays.asList(comments));
+	    
+	    return stack;
 	}
 
 	// Method to get all comments

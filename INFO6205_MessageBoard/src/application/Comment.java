@@ -1,8 +1,14 @@
 package application;
 
 import java.util.UUID;
+
+import database.DatabaseConnector;
+
+import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 
 public class Comment {
 	private UUID commentID;
@@ -12,12 +18,11 @@ public class Comment {
 	private Timestamp createDate;
 
 	// Constructor for new comment
-	public Comment(String articleID, String authorID, String content, Timestamp createDate) {
+	public Comment(String articleID, String authorID, String content) {
 		this.commentID = UUID.randomUUID();
 		this.articleID = articleID;
 		this.authorID = authorID;
 		this.content = content;
-		this.createDate = createDate;
 	}
 
 	// Constructor for existed comment
@@ -52,6 +57,34 @@ public class Comment {
 
 	public Timestamp getCreateDate() {
 		return this.createDate;
+	}
+	
+	public String getFormattedComment() throws SQLException {
+	    // Retrieve the User object based on authorID
+	    User author = DatabaseConnector.getUserByID(DatabaseConnector.getInstance().getConnection(), authorID); // Assuming a method to retrieve user by ID
+
+	    // Check if the author exists
+	    if (author != null) {
+	        // Use the username instead of authorID
+	        StringBuilder formattedComment = new StringBuilder();
+	        formattedComment.append(author.getUsername()).append("\n");
+
+	        // Assuming createDate is a Timestamp object
+	        // Convert the Timestamp to LocalDateTime for formatting
+	        System.out.println(createDate);
+	        LocalDateTime localDateTime = createDate.toLocalDateTime();
+
+	        // Format the LocalDateTime
+	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+	        String formattedDateTime = localDateTime.format(formatter);
+
+	        formattedComment.append(formattedDateTime).append("\n\n");
+	        formattedComment.append(content).append("\n");
+	        return formattedComment.toString();
+	    } else {
+	        // If author is not found, return a placeholder
+	        return "Unknown Author\n" + createDate + "\n\n" + content + "\n";
+	    }
 	}
 
 }
