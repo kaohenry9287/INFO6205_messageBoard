@@ -111,15 +111,28 @@
                                  </children>
                               </AnchorPane>
                               <AnchorPane>
-                                 <children>
-                                    <Button layoutX="507.0" layoutY="226.0" mnemonicParsing="false" text="Comment" />
-                                    <TextArea layoutY="65.0" prefHeight="150.0" prefWidth="594.0" />
-                                    <Text layoutX="50.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username">
-                                       <font>
-                                          <Font name="October Compressed Tamil Black" size="13.0" />
-                                       </font></Text>
-                                 </children>
-                              </AnchorPane>
+								<children>
+									<AnchorPane>
+										<children>
+											<!-- TextArea for entering a new comment -->
+											<TextArea fx:id="commentTextArea" layoutX="14.0"
+												layoutY="183.0" prefHeight="29.0" prefWidth="566.0" />
+
+											<!-- Button for adding a comment -->
+											<Button fx:id="commentButton" layoutX="508.0"
+												layoutY="231.0" mnemonicParsing="false"
+												onAction="#commentButtonClicked" text="Comment" />
+											<Button fx:id="commentSortButton" layoutX="14.0"
+												layoutY="11.0" mnemonicParsing="false" prefHeight="26.0"
+												prefWidth="72.0" onAction="#commentSortButtonClicked" text="Date ↑" />
+										</children>
+									</AnchorPane>
+									<ListView fx:id="commentListView"
+										fixedCellSize="80.0" layoutX="14.0" layoutY="43.0"
+										prefHeight="132.0" prefWidth="566.0"
+										style="-fx-control-inner-background: FFFBD5" />
+								</children>
+							</AnchorPane>
                            </items>
                         </SplitPane>
                      </children>

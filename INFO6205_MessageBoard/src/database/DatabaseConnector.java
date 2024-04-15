@@ -9,6 +9,7 @@ import application.UnreadComment;
 import application.User;
 import application.Comment;
 
+import java.time.LocalDateTime;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -259,6 +260,35 @@ public class DatabaseConnector {
 		return boardList;
 	}
 
+	// Get all Articles in database
+	public static ArticleList getAllArticles(Connection connection) throws SQLException {
+		String sql = "SELECT * FROM Article";
+		ArticleList articleList = new ArticleList();
+		try (PreparedStatement statement = connection.prepareStatement(sql);
+				ResultSet resultSet = statement.executeQuery()) {
+
+			while (resultSet.next()) {
+				String articleID = resultSet.getString("articleID");
+				String boardID = resultSet.getString("boardID");
+				String authorID = resultSet.getString("authorID");
+				String title = resultSet.getString("title");
+				String content = resultSet.getString("content");
+				Timestamp createDate = resultSet.getTimestamp("createDate");
+				int commentCount = resultSet.getInt("commentCount");
+
+				// Add the board to the list
+				Article article = new Article(articleID, boardID, authorID, title, content, createDate,
+						commentCount);
+				articleList.addArticle(article);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new SQLException("Error retrieving boards from database.", e);
+		}
+
+		return articleList;
+	}
+
 	// Insert Article
 	public static void insertArticleData(Connection connection, String articleID, String boardID, String authorID,
 			String title, String content) throws SQLException {
@@ -302,8 +332,34 @@ public class DatabaseConnector {
 			statement.setString(3, authorID);
 			statement.setString(4, content);
 
+
+			// Execute the SQL statement
+			statement.executeUpdate();
+			
+			System.out.println("Insert comment success!");
 		}
 
+	}
+
+	// Add a method to retrieve all comments for a given article
+	public static CommentList getAllCommentsForArticle(Connection connection, String articleID) throws SQLException {
+		String sql = "SELECT * FROM Comment WHERE articleID = ?";
+		CommentList commentList = new CommentList();
+		try (PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setString(1, articleID);
+			try (ResultSet resultSet = statement.executeQuery()) {
+				while (resultSet.next()) {
+					String commentID = resultSet.getString("commentID");
+					String authorID = resultSet.getString("authorID");
+					String content = resultSet.getString("content");
+					Timestamp createDate = resultSet.getTimestamp("createDate");
+
+					Comment comment = new Comment(commentID, articleID, authorID, content, createDate);
+					commentList.addComment(comment);
+				}
+			}
+		}
+		return commentList;
 	}
 
 	// Update article

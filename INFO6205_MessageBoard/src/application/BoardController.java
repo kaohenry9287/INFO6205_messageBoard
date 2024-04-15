@@ -41,6 +41,13 @@ public class BoardController extends InitialData implements Initializable {
 	private Button viewUnreadButton;
 
 	@FXML
+	private Button commentButton;
+
+	@FXML
+	private Button commentSortButton;
+
+	@FXML
+
 	private ListView<String> boardListView;
 
 	@FXML
@@ -70,6 +77,12 @@ public class BoardController extends InitialData implements Initializable {
 	@FXML
 	private ListView<String> articlelistView;
 
+	@FXML
+	private ListView<String> commentListView;
+	
+	// Define a boolean variable to track the current sorting order
+	private boolean ascendingOrder = true;
+
 	private ArticleList articleList;
 
 	private AnchorPane currentAnchorPane;
@@ -83,6 +96,7 @@ public class BoardController extends InitialData implements Initializable {
 		articleAnchorPane.setVisible(false);
 		commentAnchorPane.setVisible(false);
 	}
+
 
 	public void setUsername(String username) {
 		usernameText.setText(username);
@@ -205,6 +219,91 @@ public class BoardController extends InitialData implements Initializable {
 		Stage newStage = new Stage();
 		newStage.setScene(newScene);
 		newStage.show();
+	}
+
+
+	@FXML
+	public void commentSortButtonClicked(ActionEvent event) throws SQLException {
+	    try {
+	        // Get the current list of comments
+	        CommentList commentList = getCurrentCommentList();
+	        List<Comment> comments = commentList.getAllComments();
+
+	        // Toggle the sorting order
+	        ascendingOrder = !ascendingOrder; // Toggle the sorting order
+
+	        // Sort the comments based on the current order
+	        comments = commentList.sort(ascendingOrder);
+
+	        // Show sorted comments on screen
+	        ObservableList<String> sortedComments = FXCollections.observableArrayList();
+	        for (Comment comment : comments) {
+	            sortedComments.add(comment.getFormattedComment());
+	        }
+	        commentListView.setItems(sortedComments);
+	        
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+
+
+	// Event handler for the "Comment" button
+	@FXML
+	public void commentButtonClicked(ActionEvent event) {
+		try {
+			// Get the selected board and article
+			String selectedBoardID = getCurrentBoardList()
+					.getBoardByIndex(boardListView.getSelectionModel().getSelectedIndex()).getBoardId();
+			String tempArticleID = "96fd3370-f9bf-11ee-8d65-5f7b57ad9a0e"; // Temporary article ID
+			// Retrieve content of the comment
+			String content = commentTextArea.getText();
+
+			// Insert the comment into the database
+			Connection connection = DatabaseConnector.getDBConnection();
+			String authorID = getCurrentUser().getId();
+
+			Comment newComment = new Comment(tempArticleID, authorID, content);
+			CommentList commentList = DatabaseConnector.getAllCommentsForArticle(connection, tempArticleID);
+			setCurrentCommentList(commentList);
+
+			commentList.push(newComment);
+
+			// Reload comments for the selected article
+			loadCommentsForArticle(selectedBoardID, tempArticleID);
+
+			// Clear the comment TextArea
+			commentTextArea.clear();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void loadCommentsForArticle(String boardID, String articleID) {
+		try {
+			Connection connection = DatabaseConnector.getDBConnection();
+
+			setCurrentArticleList(getCurrentBoardList().getBoardByID(boardID).getArticleList());
+
+			// Get the selected article
+			Article selectedArticle = getCurrentBoardList().getBoardByID(boardID).getArticleList()
+					.getArticleByID(articleID);
+
+			// Get the comments for the selected article
+			CommentList commentList = DatabaseConnector.getAllCommentsForArticle(connection,
+					selectedArticle.getArticleId());
+			setCurrentCommentList(commentList);
+
+			// Show comment on screen
+			ObservableList<String> comments = FXCollections.observableArrayList();
+			for (Comment comment : commentList.getAllComments()) {
+				comments.add(comment.getFormattedComment());
+			}
+			commentListView.setItems(comments);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
