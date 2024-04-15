@@ -83,19 +83,23 @@ public class BoardController extends InitialData implements Initializable {
 	@FXML
 	private ListView<String> commentListView;
 
+	@FXML
+	private AnchorPane searchAnchorPane;
+	
+	@FXML
+	private AnchorPane articleAnchorPane;
+	
+	@FXML
+	private AnchorPane commentAnchorPane;
+
 	// Define a boolean variable to track the current sorting order
 	private boolean ascendingOrder = true;
 
 	private ArticleList articleList;
 
-	private AnchorPane currentAnchorPane;
-	private AnchorPane searchAnchorPane;
-	private AnchorPane articleAnchorPane;
-	private AnchorPane commentAnchorPane;
-
 	public void initData(User user) {
 		setCurrentUser(user);
-		currentAnchorPane = searchAnchorPane;
+		searchAnchorPane.setVisible(true);
 		articleAnchorPane.setVisible(false);
 		commentAnchorPane.setVisible(false);
 	}
@@ -345,8 +349,8 @@ public class BoardController extends InitialData implements Initializable {
 											// Get the author's user name based on the author ID
 											try {
 												String authorId = article.getAuthorId();
-												String authorName = DatabaseConnector.getUserByID(connection,
-														authorId).getUsername();
+												String authorName = DatabaseConnector.getUserByID(connection, authorId)
+														.getUsername();
 												articleauthor.setText(authorName); // Display the author's user name
 											} catch (SQLException e) {
 												e.printStackTrace();
