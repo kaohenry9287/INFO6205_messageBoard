@@ -160,10 +160,23 @@ public class ArticleList implements StackList<Article> {
 	}
 
 	// Method to get Article by topic
-	public Article getArticleByTitle(String givenTopic) {
+	public Article getArticleByTitle(String givenTitle) {
 		for (Article article : stack) {
-			if (article.getArticleId().equals(givenTopic)) {
+			if (article.getTitle().equals(givenTitle)) {
 				return article;
+			}
+		}
+		return null;
+	}
+
+	// Method to get board from given BoardID
+	public Article getArticleByIndex(int givenIndex) {
+		int count = 0;
+		for (Article article : stack) {
+			if (count == givenIndex) {
+				return article;
+			} else {
+				count++;
 			}
 		}
 		return null;

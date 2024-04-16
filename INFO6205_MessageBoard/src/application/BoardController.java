@@ -373,13 +373,13 @@ public class BoardController extends InitialData implements Initializable {
 				}
 			});
 
-			boardListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-				int selectedBoardIndex = boardListView.getSelectionModel().getSelectedIndex();
-				String selectedBoardID = getCurrentBoardList().getBoardByIndex(selectedBoardIndex).getBoardId();
+			articlelistView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+				int selectedArticleIndex = articlelistView.getSelectionModel().getSelectedIndex();
+				String selectedArticleID = getCurrentArticleList().getArticleByIndex(selectedArticleIndex).getArticleId();
 
-				if (selectedBoardID != null) {
+				if (selectedArticleID != null) {
 					try {
-						ArticleList articles = DatabaseConnector.getArticlesByBoardId(connection, selectedBoardID);
+						ArticleList articles = DatabaseConnector.getArticlesByBoardId(connection, selectedArticleID);
 						setCurrentArticleList(articles);
 						// Check if articlelistView is not null
 						if (articlelistView != null) {
@@ -395,7 +395,7 @@ public class BoardController extends InitialData implements Initializable {
 					}
 				}
 
-				loadCommentsForArticle(selectedBoardID, getCurrentArticle().getArticleId());
+				loadCommentsForArticle(selectedArticleID, getCurrentArticle().getArticleId());
 			});
 
 		} catch (Exception e) {
@@ -440,3 +440,4 @@ public class BoardController extends InitialData implements Initializable {
 	}
 
 }
+
