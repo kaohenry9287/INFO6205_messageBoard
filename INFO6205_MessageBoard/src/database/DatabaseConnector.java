@@ -30,7 +30,7 @@ public class DatabaseConnector {
 
 	static String jdbcUrl = "jdbc:mysql://localhost:3306/MessageBoard";
 	static String username = "root";
-	static String password = "123qweasd";
+	static String password = "henry0208";
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -341,7 +341,7 @@ public class DatabaseConnector {
 	// Insert Comment
 	public static void insertCommentData(Connection connection, String commentID, String articleID, String authorID,
 			String content) throws SQLException {
-		String sql = "INSERT INTO Comment (commentID, articleID, authorID, contnent, createDate) VALUES (?, ?, ?, ?, NOW())";
+		String sql = "INSERT INTO Comment (commentID, articleID, authorID, content, createDate) VALUES (?, ?, ?, ?, NOW())";
 		try (PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, commentID);
 			statement.setString(2, articleID);

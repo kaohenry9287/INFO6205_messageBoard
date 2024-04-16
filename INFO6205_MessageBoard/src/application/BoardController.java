@@ -85,7 +85,7 @@ public class BoardController extends InitialData implements Initializable {
 
 	@FXML
 	private AnchorPane searchAnchorPane;
-	
+
 	@FXML
 	private AnchorPane commentAnchorPane;
 
@@ -264,7 +264,8 @@ public class BoardController extends InitialData implements Initializable {
 			String authorID = getCurrentUser().getId();
 
 			Comment newComment = new Comment(getCurrentArticle().getArticleId(), authorID, content);
-			CommentList commentList = DatabaseConnector.getAllCommentsForArticle(connection, getCurrentArticle().getArticleId());
+			CommentList commentList = DatabaseConnector.getAllCommentsForArticle(connection,
+					getCurrentArticle().getArticleId());
 			setCurrentCommentList(commentList);
 
 			commentList.push(newComment);
@@ -283,8 +284,8 @@ public class BoardController extends InitialData implements Initializable {
 	private void loadCommentsForArticle(String boardID, String articleID) {
 		try {
 			Connection connection = DatabaseConnector.getDBConnection();
-            BoardList boardList = DatabaseConnector.getAllBoards(connection);
-            System.out.println(boardID);
+			BoardList boardList = DatabaseConnector.getAllBoards(connection);
+			System.out.println(boardID);
 			setCurrentArticleList(boardList.getBoardByID(boardID).getArticleList());
 
 			// Get the selected article
@@ -309,104 +310,108 @@ public class BoardController extends InitialData implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-	    Connection connection = null;
+		Connection connection = null;
 
-	    try {
-	        // Initialize articleList
-	        articleList = new ArticleList();
+		try {
+			// Initialize articleList
+			articleList = new ArticleList();
 
-	        // Get a database connection
-	        connection = DatabaseConnector.getDBConnection();
+			// Get a database connection
+			connection = DatabaseConnector.getDBConnection();
 
-	        // Retrieve all boards and populate boardListView
-	        BoardList boardList = DatabaseConnector.getAllBoards(connection);
-	        ObservableList<String> boardNames = FXCollections.observableArrayList();
+			// Retrieve all boards and populate boardListView
+			BoardList boardList = DatabaseConnector.getAllBoards(connection);
+			ObservableList<String> boardNames = FXCollections.observableArrayList();
 
-	        for (Board board : boardList.getAllBoards()) {
-	            boardNames.add(board.getBoardName());
-	        }
+			for (Board board : boardList.getAllBoards()) {
+				boardNames.add(board.getBoardName());
+			}
 
-	        boardListView.setItems(boardNames);
+			boardListView.setItems(boardNames);
 
-	        // Handle board selection
-	        boardListView.setOnMouseClicked(event -> {
-	            String selectedBoard = boardListView.getSelectionModel().getSelectedItem();
+			// Handle board selection
+			boardListView.setOnMouseClicked(event -> {
+				String selectedBoard = boardListView.getSelectionModel().getSelectedItem();
 
-	            if (selectedBoard != null) {
-	                try {
-	                    // Show/hide panes
-	                    searchAnchorPane.setVisible(true);
-	                    commentAnchorPane.setVisible(false);
+				if (selectedBoard != null) {
+					try {
+						// Show/hide panes
+						searchAnchorPane.setVisible(true);
+						commentAnchorPane.setVisible(false);
 
-	                    // Retrieve articles by selected board name
-	            		Connection thisconnection = DatabaseConnector.getDBConnection();
+						// Retrieve articles by selected board name
+						Connection thisconnection = DatabaseConnector.getDBConnection();
 
-	                    ArticleList articles = DatabaseConnector.getArticlesByBoardName(thisconnection, selectedBoard);
-	                    setCurrentArticleList(articles);
+						ArticleList articles = DatabaseConnector.getArticlesByBoardName(thisconnection, selectedBoard);
+						setCurrentArticleList(articles);
 
-	                    // Populate articleListView with article titles
-	                    ObservableList<String> articleTitles = FXCollections.observableArrayList();
+						// Populate articleListView with article titles
+						ObservableList<String> articleTitles = FXCollections.observableArrayList();
 
-	                    for (Article article : articles.getAllArticles()) {
-	                        articleTitles.add(article.getTitle());
-	                    }
+						for (Article article : articles.getAllArticles()) {
+							articleTitles.add(article.getTitle());
+						}
 
-	                    articlelistView.setItems(articleTitles);
+						articlelistView.setItems(articleTitles);
 
-	                    // Handle article selection
-	                    articlelistView.setOnMouseClicked(articleEvent -> {
-	                        String selectedArticleTitle = articlelistView.getSelectionModel().getSelectedItem();
+						// Handle article selection
+						articlelistView.setOnMouseClicked(articleEvent -> {
+							String selectedArticleTitle = articlelistView.getSelectionModel().getSelectedItem();
+							setCurrentArticle(getCurrentArticleList().getArticleByTitle(selectedArticleTitle));
 
-	                        if (selectedArticleTitle != null) {
-	                            Article selectedArticle = getCurrentArticleList().getArticleByTitle(selectedArticleTitle);
+							if (selectedArticleTitle != null) {
+								Article selectedArticle = getCurrentArticleList()
+										.getArticleByTitle(selectedArticleTitle);
 
-	                            if (selectedArticle != null) {
-	                                // Display article details
-	                                articletopic.setText(selectedArticle.getTitle());
-	                                articlecontent.setText(selectedArticle.getContent());
+								if (selectedArticle != null) {
+									// Display article details
+									articletopic.setText(selectedArticle.getTitle());
+									articlecontent.setText(selectedArticle.getContent());
 
-	                                try {
-	                                    // Get author's username based on author ID
-	                                    String authorId = selectedArticle.getAuthorId();
-	                                    String authorName = DatabaseConnector.getUserByID(thisconnection, authorId).getUsername();
-	                                    articleauthor.setText(authorName);
-	                                } catch (SQLException e) {
-	                                    e.printStackTrace();
-	                                }
+									try {
+										// Get author's username based on author ID
+										String authorId = selectedArticle.getAuthorId();
+										String authorName = DatabaseConnector.getUserByID(thisconnection, authorId)
+												.getUsername();
+										articleauthor.setText(authorName);
+									} catch (SQLException e) {
+										e.printStackTrace();
+									}
 
-	                                // Load comments for the selected article
-	                                try {
-	            	            		Connection newConnection = DatabaseConnector.getDBConnection();
+									// Load comments for the selected article
+									try {
+										Connection newConnection = DatabaseConnector.getDBConnection();
 
-										loadCommentsForArticle(DatabaseConnector.getBoardIDbyBoardName(newConnection, selectedBoard), selectedArticle.getArticleId());
+										loadCommentsForArticle(
+												DatabaseConnector.getBoardIDbyBoardName(newConnection, selectedBoard),
+												selectedArticle.getArticleId());
 									} catch (SQLException e) {
 										// TODO Auto-generated catch block
 										e.printStackTrace();
 									}
-	                            }
-	                        }
-	                    });
+								}
+							}
+						});
 
-	                } catch (SQLException e) {
-	                    e.printStackTrace();
-	                }
-	            }
-	        });
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+			});
 
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    } finally {
-	        // Close the database connection in the finally block
-	        if (connection != null) {
-	            try {
-	                connection.close();
-	            } catch (SQLException e) {
-	                e.printStackTrace(); // Handle or log the exception appropriately
-	            }
-	        }
-	    }
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			// Close the database connection in the finally block
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace(); // Handle or log the exception appropriately
+				}
+			}
+		}
 	}
-
 
 	public void search(ActionEvent event) {
 		if (articleList == null) {
@@ -435,7 +440,7 @@ public class BoardController extends InitialData implements Initializable {
 	public void goToNextAnchorPane(ActionEvent event) {
 
 		String selectedTitle = articlelistView.getSelectionModel().getSelectedItem();
-		if (commentAnchorPane != null) {
+		if (selectedTitle != null) {
 			searchAnchorPane.setVisible(false);
 			commentAnchorPane.setVisible(true);
 		} else {
@@ -445,4 +450,3 @@ public class BoardController extends InitialData implements Initializable {
 	}
 
 }
-
