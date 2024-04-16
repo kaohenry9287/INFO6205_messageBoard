@@ -91,7 +91,7 @@
 														<Font name="October Compressed Tamil Black" size="14.0" />
 													</font>
 												</Text>
-												<TextArea fx:id="articlecontent" layoutX="14.0" layoutY="77.0" prefHeight="122.0" prefWidth="566.0" />
+												<TextArea fx:id="articlecontent" editable="false" layoutX="14.0" layoutY="77.0" prefHeight="122.0" prefWidth="566.0" />
 												<Text fx:id="articletopic" layoutX="15.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Topic" wrappingWidth="153.6334228515625">
 													<font>
 														<Font name="October Compressed Tamil Black" size="14.0" />
