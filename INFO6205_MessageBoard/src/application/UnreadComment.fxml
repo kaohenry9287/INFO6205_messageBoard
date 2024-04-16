@@ -12,7 +12,7 @@
             <Font name="October Condensed Tamil Black" size="24.0" />
          </font>
       </Text>
-      <Text fx:id="contentText" layoutX="234.0" layoutY="149.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Comment content" wrappingWidth="183.49102783203125">
+      <Text fx:id="contentText" layoutX="234.0" layoutY="143.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Comment content" wrappingWidth="362.49102783203125">
          <font>
             <Font name="October Condensed Tamil Heavy" size="16.0" />
          </font>

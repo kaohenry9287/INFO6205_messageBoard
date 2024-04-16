@@ -157,7 +157,7 @@ public class BoardController extends InitialData implements Initializable {
 
 	public void searchArticleButtonClicked(ActionEvent event) {
 		if (getCurrentArticleList() == null) {
-			System.out.println("Article list is null!");
+			System.out.println("Article list is null.");
 			return;
 		}
 
@@ -205,7 +205,7 @@ public class BoardController extends InitialData implements Initializable {
 		Connection connection = DatabaseConnector.getDBConnection();
 		UnreadComment unreadcomments = DatabaseConnector.getUnreadComments(connection, getCurrentUser().getId());
 		if (unreadcomments.isEmpty()) {
-			unreadCommentController.setContent("No unread");
+			unreadCommentController.setContent("You have no unread comment.");
 		} else {
 			unreadCommentController.setContent(unreadcomments.peek().getContent());
 			unreadcomments.dequeue();
@@ -285,7 +285,6 @@ public class BoardController extends InitialData implements Initializable {
 		try {
 			Connection connection = DatabaseConnector.getDBConnection();
 			BoardList boardList = DatabaseConnector.getAllBoards(connection);
-			System.out.println(boardID);
 			setCurrentArticleList(boardList.getBoardByID(boardID).getArticleList());
 
 			// Get the selected article
@@ -340,9 +339,9 @@ public class BoardController extends InitialData implements Initializable {
 						commentAnchorPane.setVisible(false);
 
 						// Retrieve articles by selected board name
-						Connection thisconnection = DatabaseConnector.getDBConnection();
+						Connection currentConnection = DatabaseConnector.getDBConnection();
 
-						ArticleList articles = DatabaseConnector.getArticlesByBoardName(thisconnection, selectedBoard);
+						ArticleList articles = DatabaseConnector.getArticlesByBoardName(currentConnection, selectedBoard);
 						setCurrentArticleList(articles);
 
 						// Populate articleListView with article titles
@@ -371,7 +370,7 @@ public class BoardController extends InitialData implements Initializable {
 									try {
 										// Get author's username based on author ID
 										String authorId = selectedArticle.getAuthorId();
-										String authorName = DatabaseConnector.getUserByID(thisconnection, authorId)
+										String authorName = DatabaseConnector.getUserByID(currentConnection, authorId)
 												.getUsername();
 										articleauthor.setText(authorName);
 									} catch (SQLException e) {
@@ -415,7 +414,7 @@ public class BoardController extends InitialData implements Initializable {
 
 	public void search(ActionEvent event) {
 		if (articleList == null) {
-			System.out.println("Article list is null!");
+			System.out.println("Article list is null.");
 			return;
 		}
 
@@ -445,7 +444,7 @@ public class BoardController extends InitialData implements Initializable {
 			commentAnchorPane.setVisible(true);
 		} else {
 			// Handle the case where articleAnchorPane is null
-			System.out.println("Article anchor pane is null!");
+			System.out.println("Please select an article");
 		}
 	}
 

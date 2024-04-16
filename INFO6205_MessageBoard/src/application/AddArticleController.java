@@ -56,8 +56,6 @@ public class AddArticleController extends InitialData {
             // Push the new article onto the stack
             Article newArticle = new Article(boardId, getCurrentUser().getId(), topic, content);
             ArticleList articles = DatabaseConnector.getArticlesByBoardName(connection, selectedBoard);
-            System.out.println(articles.getAllArticles());
-            System.out.println(newArticle.getAuthorId());
             articles.push(newArticle);
 
             // Navigate to the next page
@@ -77,7 +75,7 @@ public class AddArticleController extends InitialData {
             Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             currentStage.close();
 
-            System.out.println("Article created successfully!");
+            System.out.println("Article created successfully.");
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Error creating new article.");

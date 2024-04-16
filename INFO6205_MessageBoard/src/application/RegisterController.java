@@ -96,7 +96,7 @@ public class RegisterController {
 	        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 	        currentStage.close();
 
-	        System.out.println("User registered successfully!");
+	        System.out.println("User registered successfully.");
 	    } catch (SQLException | IOException e) {
 	        e.printStackTrace();
 	        System.out.println("Error registering user.");

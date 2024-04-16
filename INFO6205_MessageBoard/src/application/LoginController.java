@@ -78,7 +78,7 @@ public class LoginController extends InitialData {
 
 	        // Check if user exists and password matches
 	        if (currentUser == null) {
-	            System.out.println("Login failed! Incorrect username or password.");
+	            System.out.println("Login failed. Incorrect username or password.");
 	        } else {
 	            // Retrieve all boards from the database
 	            BoardList boardList = DatabaseConnector.getAllBoards(connection);
@@ -104,7 +104,7 @@ public class LoginController extends InitialData {
 	            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 	            currentStage.close();
 
-	            System.out.println("User logged in successfully!");
+	            System.out.println("User logged in successfully.");
 	        }
 
 	        // Close the database connection

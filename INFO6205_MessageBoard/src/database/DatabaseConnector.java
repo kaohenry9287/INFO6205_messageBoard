@@ -30,7 +30,7 @@ public class DatabaseConnector {
 
 	static String jdbcUrl = "jdbc:mysql://localhost:3306/MessageBoard";
 	static String username = "root";
-	static String password = "henry0208";
+	static String password = "123qweasd";
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -42,13 +42,13 @@ public class DatabaseConnector {
 			// Establish connection
 			connection = DriverManager.getConnection(jdbcUrl, username, password);
 			if (connection != null) {
-				System.out.println("Connected to the database!");
+				System.out.println("Connected to the database.");
 			}
 		} catch (ClassNotFoundException e) {
-			System.out.println("MySQL JDBC Driver not found!");
+			System.out.println("MySQL JDBC Driver not found.");
 			e.printStackTrace();
 		} catch (SQLException e) {
-			System.out.println("Connection failed! Check output console.");
+			System.out.println("Connection failed. Check output console.");
 			e.printStackTrace();
 		}
 
@@ -177,7 +177,7 @@ public class DatabaseConnector {
 			int rowsAffected = updateStatement.executeUpdate();
 
 			if (rowsAffected > 0) {
-				System.out.println("Logout successfully!");
+				System.out.println("Logout successfully.");
 			} else {
 				System.out.println("User with userId " + userId + " not found. Logout date not updated.");
 			}
@@ -351,7 +351,7 @@ public class DatabaseConnector {
 			// Execute the SQL statement
 			statement.executeUpdate();
 
-			System.out.println("Insert comment success!");
+			System.out.println("Insert comment success.");
 		}
 
 	}

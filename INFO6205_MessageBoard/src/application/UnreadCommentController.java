@@ -52,7 +52,7 @@ public class UnreadCommentController extends InitialData{
 	public void nextButtonClicked(ActionEvent event) throws IOException {
 		UnreadComment unreadComments = getCurrentUnreadComments();
 		if (unreadComments.isEmpty()) {
-			setContent("No unread");
+			setContent("You have no unread comment.");
 		} else {
 			setContent(unreadComments.peek().getContent());
 			unreadComments.dequeue();

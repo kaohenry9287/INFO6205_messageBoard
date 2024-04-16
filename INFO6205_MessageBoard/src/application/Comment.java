@@ -69,7 +69,6 @@ public class Comment {
 
 	        // Assuming createDate is a Timestamp object
 	        // Convert the Timestamp to LocalDateTime for formatting
-	        System.out.println(createDate);
 	        LocalDateTime localDateTime = createDate.toLocalDateTime();
 
 	        // Format the LocalDateTime

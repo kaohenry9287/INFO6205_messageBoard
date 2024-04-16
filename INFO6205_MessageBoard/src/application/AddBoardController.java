@@ -72,7 +72,7 @@ public class AddBoardController extends InitialData {
 	        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 	        currentStage.close();
 
-	        System.out.println("Board created successfully!");
+	        System.out.println("Board created successfully.");
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	        System.out.println("Error creating new board.");
