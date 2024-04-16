@@ -30,7 +30,7 @@ public class DatabaseConnector {
 
 	static String jdbcUrl = "jdbc:mysql://localhost:3306/MessageBoard";
 	static String username = "root";
-	static String password = "henry0208";
+	static String password = "123qweasd";
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub

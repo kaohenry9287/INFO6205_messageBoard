@@ -283,8 +283,9 @@ public class BoardController extends InitialData implements Initializable {
 	private void loadCommentsForArticle(String boardID, String articleID) {
 		try {
 			Connection connection = DatabaseConnector.getDBConnection();
-
-			setCurrentArticleList(getCurrentBoardList().getBoardByID(boardID).getArticleList());
+            BoardList boardList = DatabaseConnector.getAllBoards(connection);
+            System.out.println(boardID);
+			setCurrentArticleList(boardList.getBoardByID(boardID).getArticleList());
 
 			// Get the selected article
 			Article selectedArticle = getCurrentBoardList().getBoardByID(boardID).getArticleList()
@@ -308,100 +309,104 @@ public class BoardController extends InitialData implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+	    Connection connection = null;
 
-		try {
-			// Initialize articleList
-			articleList = new ArticleList();
+	    try {
+	        // Initialize articleList
+	        articleList = new ArticleList();
 
-			Connection connection = DatabaseConnector.getDBConnection();
-			BoardList boardList = DatabaseConnector.getAllBoards(connection);
-			ObservableList<String> boardNames = FXCollections.observableArrayList();
-			for (Board board : boardList.getAllBoards()) {
-				boardNames.add(board.getBoardName());
-			}
+	        // Get a database connection
+	        connection = DatabaseConnector.getDBConnection();
 
-			boardListView.setItems(boardNames);
-			boardListView.setOnMouseClicked(event -> {
-				String selectedBoard = boardListView.getSelectionModel().getSelectedItem();
-				if (selectedBoard != null) {
-					try {
-						searchAnchorPane.setVisible(true);
-						commentAnchorPane.setVisible(false);
-						ArticleList articles = DatabaseConnector.getArticlesByBoardName(connection, selectedBoard);
-						// Check if articlelistView is not null
-						if (articlelistView != null) {
-							articlelistView.getItems().clear();
-							for (Article article : articles.getAllArticles()) {
-								articlelistView.getItems().add(article.getTitle());
-							}
-							
-							
-							
-							// Set event handler for article selection
-							articlelistView.setOnMouseClicked(articleEvent -> {
-								String selectedArticleTitle = articlelistView.getSelectionModel().getSelectedItem();
-								setCurrentArticle(getCurrentArticleList().getArticleByTitle(selectedArticleTitle));
-								
-								
-								if (selectedArticleTitle != null) {
-									for (Article article : articles.getAllArticles()) {
-										if (article.getTitle().equals(selectedArticleTitle)) {
-											articletopic.setText(article.getTitle());
+	        // Retrieve all boards and populate boardListView
+	        BoardList boardList = DatabaseConnector.getAllBoards(connection);
+	        ObservableList<String> boardNames = FXCollections.observableArrayList();
 
-											// Get the author's user name based on the author ID
-											try {
-												String authorId = article.getAuthorId();
-												String authorName = DatabaseConnector.getUserByID(connection, authorId)
-														.getUsername();
-												articleauthor.setText(authorName); // Display the author's user name
-											} catch (SQLException e) {
-												e.printStackTrace();
-											}
-											articlecontent.setText(article.getContent());
-											break;
-										}
+	        for (Board board : boardList.getAllBoards()) {
+	            boardNames.add(board.getBoardName());
+	        }
+
+	        boardListView.setItems(boardNames);
+
+	        // Handle board selection
+	        boardListView.setOnMouseClicked(event -> {
+	            String selectedBoard = boardListView.getSelectionModel().getSelectedItem();
+
+	            if (selectedBoard != null) {
+	                try {
+	                    // Show/hide panes
+	                    searchAnchorPane.setVisible(true);
+	                    commentAnchorPane.setVisible(false);
+
+	                    // Retrieve articles by selected board name
+	            		Connection thisconnection = DatabaseConnector.getDBConnection();
+
+	                    ArticleList articles = DatabaseConnector.getArticlesByBoardName(thisconnection, selectedBoard);
+	                    setCurrentArticleList(articles);
+
+	                    // Populate articleListView with article titles
+	                    ObservableList<String> articleTitles = FXCollections.observableArrayList();
+
+	                    for (Article article : articles.getAllArticles()) {
+	                        articleTitles.add(article.getTitle());
+	                    }
+
+	                    articlelistView.setItems(articleTitles);
+
+	                    // Handle article selection
+	                    articlelistView.setOnMouseClicked(articleEvent -> {
+	                        String selectedArticleTitle = articlelistView.getSelectionModel().getSelectedItem();
+
+	                        if (selectedArticleTitle != null) {
+	                            Article selectedArticle = getCurrentArticleList().getArticleByTitle(selectedArticleTitle);
+
+	                            if (selectedArticle != null) {
+	                                // Display article details
+	                                articletopic.setText(selectedArticle.getTitle());
+	                                articlecontent.setText(selectedArticle.getContent());
+
+	                                try {
+	                                    // Get author's username based on author ID
+	                                    String authorId = selectedArticle.getAuthorId();
+	                                    String authorName = DatabaseConnector.getUserByID(thisconnection, authorId).getUsername();
+	                                    articleauthor.setText(authorName);
+	                                } catch (SQLException e) {
+	                                    e.printStackTrace();
+	                                }
+
+	                                // Load comments for the selected article
+	                                try {
+	            	            		Connection newConnection = DatabaseConnector.getDBConnection();
+
+										loadCommentsForArticle(DatabaseConnector.getBoardIDbyBoardName(newConnection, selectedBoard), selectedArticle.getArticleId());
+									} catch (SQLException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
 									}
-								}
-							});
+	                            }
+	                        }
+	                    });
 
-						} else {
-							System.out.println("articlelistView is null");
-						}
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
-				}
-			});
+	                } catch (SQLException e) {
+	                    e.printStackTrace();
+	                }
+	            }
+	        });
 
-			articlelistView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-				int selectedArticleIndex = articlelistView.getSelectionModel().getSelectedIndex();
-				String selectedArticleID = getCurrentArticleList().getArticleByIndex(selectedArticleIndex).getArticleId();
-
-				if (selectedArticleID != null) {
-					try {
-						ArticleList articles = DatabaseConnector.getArticlesByBoardId(connection, selectedArticleID);
-						setCurrentArticleList(articles);
-						// Check if articlelistView is not null
-						if (articlelistView != null) {
-							articlelistView.getItems().clear();
-							for (Article article : articles.getAllArticles()) {
-								articlelistView.getItems().add(article.getTitle());
-							}
-						} else {
-							System.out.println("articlelistView is null");
-						}
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
-				}
-
-				loadCommentsForArticle(selectedArticleID, getCurrentArticle().getArticleId());
-			});
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	        // Close the database connection in the finally block
+	        if (connection != null) {
+	            try {
+	                connection.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace(); // Handle or log the exception appropriately
+	            }
+	        }
+	    }
 	}
+
 
 	public void search(ActionEvent event) {
 		if (articleList == null) {
