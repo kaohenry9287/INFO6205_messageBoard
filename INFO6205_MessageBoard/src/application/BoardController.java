@@ -87,9 +87,6 @@ public class BoardController extends InitialData implements Initializable {
 	private AnchorPane searchAnchorPane;
 	
 	@FXML
-	private AnchorPane articleAnchorPane;
-	
-	@FXML
 	private AnchorPane commentAnchorPane;
 
 	// Define a boolean variable to track the current sorting order
@@ -100,7 +97,6 @@ public class BoardController extends InitialData implements Initializable {
 	public void initData(User user) {
 		setCurrentUser(user);
 		searchAnchorPane.setVisible(true);
-		articleAnchorPane.setVisible(false);
 		commentAnchorPane.setVisible(false);
 	}
 
@@ -259,7 +255,7 @@ public class BoardController extends InitialData implements Initializable {
 			// Get the selected board and article
 			String selectedBoardID = getCurrentBoardList()
 					.getBoardByIndex(boardListView.getSelectionModel().getSelectedIndex()).getBoardId();
-			String tempArticleID = "96fd3370-f9bf-11ee-8d65-5f7b57ad9a0e"; // Temporary article ID
+
 			// Retrieve content of the comment
 			String content = commentTextArea.getText();
 
@@ -267,14 +263,14 @@ public class BoardController extends InitialData implements Initializable {
 			Connection connection = DatabaseConnector.getDBConnection();
 			String authorID = getCurrentUser().getId();
 
-			Comment newComment = new Comment(tempArticleID, authorID, content);
-			CommentList commentList = DatabaseConnector.getAllCommentsForArticle(connection, tempArticleID);
+			Comment newComment = new Comment(getCurrentArticle().getArticleId(), authorID, content);
+			CommentList commentList = DatabaseConnector.getAllCommentsForArticle(connection, getCurrentArticle().getArticleId());
 			setCurrentCommentList(commentList);
 
 			commentList.push(newComment);
 
 			// Reload comments for the selected article
-			loadCommentsForArticle(selectedBoardID, tempArticleID);
+			loadCommentsForArticle(selectedBoardID, getCurrentArticle().getArticleId());
 
 			// Clear the comment TextArea
 			commentTextArea.clear();
@@ -330,7 +326,6 @@ public class BoardController extends InitialData implements Initializable {
 				if (selectedBoard != null) {
 					try {
 						searchAnchorPane.setVisible(true);
-						articleAnchorPane.setVisible(false);
 						commentAnchorPane.setVisible(false);
 						ArticleList articles = DatabaseConnector.getArticlesByBoardName(connection, selectedBoard);
 						// Check if articlelistView is not null
@@ -339,13 +334,20 @@ public class BoardController extends InitialData implements Initializable {
 							for (Article article : articles.getAllArticles()) {
 								articlelistView.getItems().add(article.getTitle());
 							}
+							
+							
+							
 							// Set event handler for article selection
 							articlelistView.setOnMouseClicked(articleEvent -> {
 								String selectedArticleTitle = articlelistView.getSelectionModel().getSelectedItem();
+								setCurrentArticle(getCurrentArticleList().getArticleByTitle(selectedArticleTitle));
+								
+								
 								if (selectedArticleTitle != null) {
 									for (Article article : articles.getAllArticles()) {
 										if (article.getTitle().equals(selectedArticleTitle)) {
 											articletopic.setText(article.getTitle());
+
 											// Get the author's user name based on the author ID
 											try {
 												String authorId = article.getAuthorId();
@@ -393,7 +395,7 @@ public class BoardController extends InitialData implements Initializable {
 					}
 				}
 
-				// loadCommentsForArticle(selectedBoardID, tempArticleID);
+				loadCommentsForArticle(selectedBoardID, getCurrentArticle().getArticleId());
 			});
 
 		} catch (Exception e) {
@@ -428,9 +430,9 @@ public class BoardController extends InitialData implements Initializable {
 	public void goToNextAnchorPane(ActionEvent event) {
 
 		String selectedTitle = articlelistView.getSelectionModel().getSelectedItem();
-		if (articleAnchorPane != null) {
+		if (commentAnchorPane != null) {
 			searchAnchorPane.setVisible(false);
-			articleAnchorPane.setVisible(true);
+			commentAnchorPane.setVisible(true);
 		} else {
 			// Handle the case where articleAnchorPane is null
 			System.out.println("Article anchor pane is null!");

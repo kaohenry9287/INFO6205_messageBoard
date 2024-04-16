@@ -67,43 +67,18 @@
                         <Button fx:id="searchArticleButton" layoutX="523.0" layoutY="19.0" mnemonicParsing="false" onAction="#searchArticleButtonClicked" text="Search" />
                      </children>
                   </AnchorPane>
-                  <AnchorPane fx:id="articleAnchorPane" prefHeight="498.4" prefWidth="596.0" visible="false">
-                     <children>
-                        <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="498.0" prefWidth="596.0">
-                          <items>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="176.0" prefWidth="594.0">
-                                 <children>
-                                    <Text fx:id="articleauthor" layoutX="36.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username" />
-                                    <TextArea fx:id="articlecontent" editable="false" layoutY="77.0" prefHeight="122.0" prefWidth="594.0" />
-                                    <Button layoutX="507.0" layoutY="207.0" mnemonicParsing="false" text="Comment" />
-                                    <Text fx:id="articletopic" layoutX="14.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Topic" wrappingWidth="153.6334228515625">
-                                       <font>
-                                          <Font size="18.0" />
-                                       </font>
-                                    </Text>
-                                 </children>
-                              </AnchorPane>
-                            <AnchorPane>
-                                 <children>
-                                    <ListView fixedCellSize="50.0" prefHeight="334.4" prefWidth="594.4" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                 </children>
-                              </AnchorPane>
-                          </items>
-                        </SplitPane>
-                     </children>
-                  </AnchorPane>
                   <AnchorPane fx:id="commentAnchorPane" layoutX="10.0" layoutY="10.0" prefHeight="498.4" prefWidth="596.0" visible="false">
                      <children>
                         <SplitPane dividerPositions="0.45" layoutX="-9.6" layoutY="-9.6" orientation="VERTICAL" prefHeight="500.0" prefWidth="596.0" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="-10.0">
                            <items>
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="222.0" prefWidth="594.0">
                                  <children>
-                                    <Text layoutX="36.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username">
+                                    <Text fx:id="articleauthor" layoutX="36.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username">
                                        <font>
                                           <Font name="October Compressed Tamil Black" size="13.0" />
                                        </font></Text>
-                                    <TextArea layoutY="77.0" prefHeight="122.0" prefWidth="594.0" />
-                                    <Text layoutX="14.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Topic" wrappingWidth="153.6334228515625">
+                                    <TextArea fx:id="articlecontent" layoutY="77.0" prefHeight="122.0" prefWidth="594.0" />
+                                    <Text fx:id="articletopic" layoutX="14.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Topic" wrappingWidth="153.6334228515625">
                                        <font>
                                           <Font name="October Compressed Tamil Black" size="13.0" />
                                        </font>
@@ -115,22 +90,14 @@
 									<AnchorPane>
 										<children>
 											<!-- TextArea for entering a new comment -->
-											<TextArea fx:id="commentTextArea" layoutX="14.0"
-												layoutY="183.0" prefHeight="29.0" prefWidth="566.0" />
+											<TextArea fx:id="commentTextArea" layoutX="14.0" layoutY="183.0" prefHeight="29.0" prefWidth="566.0" />
 
 											<!-- Button for adding a comment -->
-											<Button fx:id="commentButton" layoutX="508.0"
-												layoutY="231.0" mnemonicParsing="false"
-												onAction="#commentButtonClicked" text="Comment" />
-											<Button fx:id="commentSortButton" layoutX="14.0"
-												layoutY="11.0" mnemonicParsing="false" prefHeight="26.0"
-												prefWidth="72.0" onAction="#commentSortButtonClicked" text="Date ↑" />
+											<Button fx:id="commentButton" layoutX="508.0" layoutY="231.0" mnemonicParsing="false" onAction="#commentButtonClicked" text="Comment" />
+											<Button fx:id="commentSortButton" layoutX="14.0" layoutY="11.0" mnemonicParsing="false" onAction="#commentSortButtonClicked" prefHeight="26.0" prefWidth="72.0" text="Date ↑" />
 										</children>
 									</AnchorPane>
-									<ListView fx:id="commentListView"
-										fixedCellSize="80.0" layoutX="14.0" layoutY="43.0"
-										prefHeight="132.0" prefWidth="566.0"
-										style="-fx-control-inner-background: FFFBD5" />
+									<ListView fx:id="commentListView" fixedCellSize="80.0" layoutX="14.0" layoutY="43.0" prefHeight="132.0" prefWidth="566.0" style="-fx-control-inner-background: FFFBD5" />
 								</children>
 							</AnchorPane>
                            </items>

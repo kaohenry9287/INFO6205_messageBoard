@@ -158,4 +158,14 @@ public class ArticleList implements StackList<Article> {
 		}
 		return null;
 	}
+
+	// Method to get Article by topic
+	public Article getArticleByTitle(String givenTopic) {
+		for (Article article : stack) {
+			if (article.getArticleId().equals(givenTopic)) {
+				return article;
+			}
+		}
+		return null;
+	}
 }
