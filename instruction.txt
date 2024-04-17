@@ -1,0 +1,24 @@
+1. Download project from Github and set in Eclipse or other IDE which could run JAVA program
+
+2. Setup Database, in the database you choose (EX: Dbeaver, MySQL Workbench) 
+	•	Create a localhost connection
+	•	Run the script in “MessageBoard.sql” file in following order
+	  -	PART1 (create MessageBoard database)
+	  -	PART2 (create User table)
+	  -	PART3 (create Board table)
+	  -	PART4 (create Article table)
+	  -	PART5 (create Comment table)
+
+3. In the project file, go to folder src > database > DatabaseConnector.java
+
+4. In DatabaseConnector.java, see line 32 and 33
+	•	Change “root” into your database username 
+	•	Change “123qweasd" into your database password
+
+5. Run the DatabaseConnector.java
+	•	If you see log message of “Connected to the database.”, go to Step 6.
+	•	If not, please check the previous steps, make sure you did them in a right way
+
+6. Run the “Main.java” file
+
+7. Enjoy your time in our program :) 
